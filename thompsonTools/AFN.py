@@ -2,6 +2,7 @@
 
 from Bridge import Bridge
 from Format import Format
+from StateAFD import StateAFD
 import pydot
 
 import os
@@ -223,6 +224,13 @@ class AFN:
             afdT = {symbol : [] for symbol in symbols}
             for symbol in symbols:
                 afdT[symbol] = self.manyKleene(self.manyMove(name, symbol))
+            stateAFD = StateAFD(name, afdT)
+            afd[counter] = (stateAFD)
+
+        return afd
+
+
+
             
 
 
