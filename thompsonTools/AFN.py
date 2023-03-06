@@ -211,22 +211,30 @@ class AFN:
         return sum(kleene, [])
         
 
-    def toAFD(self, counter=0):
+    def toAFD(self, counter=0, afd=None):
 
         afn = self.afn
         start = afn.start
         symbols = afn.syms
 
         afd = {}
+        toDo = []
 
         if not afd:
             name = self.cerraduraKleene(start)
+            # toDo.append(name)
             afdT = {symbol : [] for symbol in symbols}
             for symbol in symbols:
                 afdT[symbol] = self.manyKleene(self.manyMove(name, symbol))
+                toDo.append(self.manyKleene(self.manyMove(name, symbol)))
             stateAFD = StateAFD(name, afdT)
-            afd[counter] = (stateAFD)
+            afd[counter] = stateAFD
+            counter += 1
+        
+        elif toDo:
+            pass
 
+        
         return afd
 
 
