@@ -202,8 +202,30 @@ class AFN:
         return transitions.get(state, {}).get(symbol, [])
     
 
+    def toAFD(self, sym=None, counter=0):
 
+        afn = self.afn
+        start = afn.start
+        symbols = afn.syms
+        afd = {}
 
+        if not sym:
+            afd[counter] = {'name': self.cerraduraKleene(start)}
+            for sym in symbols:
+                dictSym = {sym: []}
+                
+                syms2 = []
+                for v in afd[counter].values():
+                    for els in v:
+                        coso = self.mover(els, sym)
+                        for c in coso:
+                            syms2.append(c)
+                for element in syms2:
+                    dictSym[sym] += self.cerraduraKleene(element)
+                afd[counter].update(dictSym)
+                counter += 1
+        return afd
+                
 
 
 
@@ -216,6 +238,10 @@ class AFN:
 # aff = AFN("ab*ab*")
 # aff.MYT()
 # print(aff.cerraduraKleene(0))
+
+aff = AFN("(a|b)*aab")
+aff.MYT()
+print(aff.toAFD())
 
 
         
