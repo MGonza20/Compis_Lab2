@@ -6,4 +6,5 @@ class Bridge:
         self.start = start 
         self.end = end
         self.trs = trs
+        self.syms = sorted(list({key2 for key1 in trs for key2 in trs[key1] if key2 != 'ε'}))
         
