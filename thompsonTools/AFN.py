@@ -1,7 +1,7 @@
 
 
-from .Bridge import Bridge
-from .Format import Format
+from Bridge import Bridge
+from Format import Format
 import pydot
 
 import os
@@ -195,10 +195,23 @@ class AFN:
                 
         return list(checked)
     
+
+    def mover(self, state, symbol):
+        afn = self.afn
+        transitions = afn.trs
+        return transitions.get(state, {}).get(symbol, [])
     
-aff = AFN("a?(b?)?a*")
-aff.MYT()
-print(aff.cerraduraKleene(4))
+
+
+
+
+
+
+    
+    
+# aff = AFN("a?(b?)?a*")
+# aff.MYT()
+# print(aff.cerraduraKleene(4))
 
 # aff = AFN("ab*ab*")
 # aff.MYT()
