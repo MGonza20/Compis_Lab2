@@ -210,22 +210,22 @@ class AFN:
         return sum(kleene, [])
         
 
-    def toAFD(self, sym=None, counter=0):
+    def toAFD(self, counter=0):
 
         afn = self.afn
         start = afn.start
         symbols = afn.syms
+
         afd = {}
 
-        if not sym:
-            afd[counter] = {'name': self.cerraduraKleene(start)}
-            for sym in symbols:
-                dictSym = {sym: []}
-                for elem in afd[counter]['name']:
-                    dictSym[sym].extend(self.manyKleene(self.mover(elem, sym)))
-                afd[counter].update(dictSym)
-            counter += 1
-        return afd
+        if not afd:
+            name = self.cerraduraKleene(start)
+            afdT = {symbol : [] for symbol in symbols}
+            for symbol in symbols:
+                afdT[symbol] = self.manyKleene(self.manyMove(name, symbol))
+            
+
+
                 
 
 
