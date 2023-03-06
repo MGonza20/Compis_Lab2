@@ -201,6 +201,14 @@ class AFN:
         transitions = afn.trs
         return transitions.get(state, {}).get(symbol, [])
     
+    def manyMove(self, states, symbol):
+        move = [self.mover(state, symbol) for state in states]
+        return sum(move, [])
+    
+    def manyKleene(self, states):
+        kleene = [self.cerraduraKleene(state) for state in states]
+        return sum(kleene, [])
+        
 
     def toAFD(self, sym=None, counter=0):
 
@@ -213,17 +221,10 @@ class AFN:
             afd[counter] = {'name': self.cerraduraKleene(start)}
             for sym in symbols:
                 dictSym = {sym: []}
-                
-                syms2 = []
-                for v in afd[counter].values():
-                    for els in v:
-                        coso = self.mover(els, sym)
-                        for c in coso:
-                            syms2.append(c)
-                for element in syms2:
-                    dictSym[sym] += self.cerraduraKleene(element)
+                for elem in afd[counter]['name']:
+                    dictSym[sym].extend(self.manyKleene(self.mover(elem, sym)))
                 afd[counter].update(dictSym)
-                counter += 1
+            counter += 1
         return afd
                 
 
