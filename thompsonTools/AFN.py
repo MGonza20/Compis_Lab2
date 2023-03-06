@@ -11,6 +11,7 @@ class AFN:
     def __init__(self, regex):
         self.regex = regex
         self.statesNo = 0
+        self.afn = None
 
     def MYT(self):
         formatt = Format(self.regex)
@@ -156,7 +157,10 @@ class AFN:
                 stack.append(Bridge(start, end, el1.trs))
                 self.statesNo += 2
 
-        return stack.pop()
+
+        self.afn = stack.pop()
+
+        return self.afn
 
 
     def graph_myt(self):
@@ -175,5 +179,32 @@ class AFN:
                         graph.add_node(pydot.Node(str(v2[i])))
                     graph.add_edge(pydot.Edge(str(k), str(v2[i]), label=k2))
         graph.write_png('output.png', encoding='utf-8')
+
+
+    def cerraduraKleene(self, state, checked=None):
+        if not checked:
+            checked = set()
+
+        afn = self.afn
+        transitions = afn.trs
+        checked.add(state)
+
+        for nextEp in transitions.get(state, {}).get('ε', []):
+            if nextEp not in checked:
+                checked.update(self.cerraduraKleene(nextEp, checked))
+                
+        return list(checked)
+    
+    
+aff = AFN("a?(b?)?a*")
+aff.MYT()
+print(aff.cerraduraKleene(4))
+
+# aff = AFN("ab*ab*")
+# aff.MYT()
+# print(aff.cerraduraKleene(0))
+
+
+        
 
 
