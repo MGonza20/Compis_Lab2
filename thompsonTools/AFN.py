@@ -211,7 +211,7 @@ class AFN:
         return sum(kleene, [])
         
 
-    def toAFD(self, counter=0, afd=None):
+    def toAFD(self, counter=0):
 
         afn = self.afn
         start = afn.start
@@ -219,6 +219,7 @@ class AFN:
 
         afd = {}
         toDo = []
+        checked = []
 
         if not afd:
             name = self.cerraduraKleene(start)
@@ -231,10 +232,18 @@ class AFN:
             afd[counter] = stateAFD
             counter += 1
         
-        elif toDo:
-            pass
+        while toDo:
+            name = toDo.pop()
+            if name not in checked:
+                afdT = {symbol : [] for symbol in symbols}
+                for symbol in symbols:
+                    afdT[symbol] = self.manyKleene(self.manyMove(name, symbol))
+                    toDo.append(self.manyKleene(self.manyMove(name, symbol)))
+                    checked.append(name)
+                stateAFD = StateAFD(name, afdT)
+                afd[counter] = stateAFD
+                counter += 1
 
-        
         return afd
 
 
