@@ -212,7 +212,8 @@ class AFN:
         return list(set(sum(kleene, [])))
         
 
-    def toAFD(self, counter=0):
+    def toAFD(self):
+        counter = 0
         afn = self.afn
         afd = {}
         start = afn.start
@@ -299,7 +300,7 @@ class AFN:
 # aff.MYT()
 # print(aff.cerraduraKleene(0))
 
-aff = AFN("0?(1?)?0*")
+aff = AFN("(a|b)*abb")
 aff.MYT()
 aff.toAFD()
 aff.draw_afd()
