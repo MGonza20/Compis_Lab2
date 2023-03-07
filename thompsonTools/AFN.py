@@ -212,38 +212,24 @@ class AFN:
         
 
     def toAFD(self, counter=0):
-
         afn = self.afn
+        afd = {}
         start = afn.start
         symbols = afn.syms
-
-        afd = {}
-        toDo = []
+        toDo = [self.cerraduraKleene(start)]
         checked = []
 
-        if not afd:
-            name = self.cerraduraKleene(start)
-            afdT = {symbol : [] for symbol in symbols}
-            for symbol in symbols:
-                afdT[symbol] = self.manyKleene(self.manyMove(name, symbol))
-                toDo.append(self.manyKleene(self.manyMove(name, symbol)))
-            stateAFD = StateAFD(name, afdT)
-            afd[counter] = stateAFD
-            counter += 1
-        
         while toDo:
             name = toDo.pop(0)
             if name not in checked:
-                afdT = {symbol : [] for symbol in symbols}
-                for symbol in symbols:
-                    afdT[symbol] = self.manyKleene(self.manyMove(name, symbol))
-                    toDo.append(self.manyKleene(self.manyMove(name, symbol)))
-                    checked.append(name)
-                stateAFD = StateAFD(name, afdT)
-                afd[counter] = stateAFD
+                afdT = {symbol : self.manyKleene(self.manyMove(name, symbol)) for symbol in symbols}
+                for state in afdT.values():
+                        toDo.append(state)
+                checked.append(name)
+                afd[counter] = StateAFD(name, afdT)
                 counter += 1
-
         return afd
+
 
     def assignLetters(self):
         sts = []
@@ -255,7 +241,6 @@ class AFN:
         letters = {}
         for i in range(len(sts)):
             letters[chr(65+i)] = sts[i]
-
         return letters
     
 
