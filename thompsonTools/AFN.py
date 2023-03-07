@@ -245,6 +245,21 @@ class AFN:
 
         return afd
 
+    def assignLetters(self):
+        sts = []
+        afd = self.toAFD()
+        for i in range(len(afd)):
+            if afd[i].name not in sts:
+                sts.append(afd[i].name)
+        
+        letters = {}
+        for i in range(len(sts)):
+            letters[chr(65+i)] = sts[i]
+
+        return letters
+    
+
+            
 
 
             
@@ -266,7 +281,8 @@ class AFN:
 
 aff = AFN("(a|b)*abb")
 aff.MYT()
-print(aff.toAFD())
+# print(aff.toAFD())
+aff.assignLetters()
 
 
         
