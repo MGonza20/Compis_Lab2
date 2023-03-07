@@ -223,7 +223,6 @@ class AFN:
 
         if not afd:
             name = self.cerraduraKleene(start)
-            # toDo.append(name)
             afdT = {symbol : [] for symbol in symbols}
             for symbol in symbols:
                 afdT[symbol] = self.manyKleene(self.manyMove(name, symbol))
@@ -233,7 +232,7 @@ class AFN:
             counter += 1
         
         while toDo:
-            name = toDo.pop()
+            name = toDo.pop(0)
             if name not in checked:
                 afdT = {symbol : [] for symbol in symbols}
                 for symbol in symbols:
@@ -265,7 +264,7 @@ class AFN:
 # aff.MYT()
 # print(aff.cerraduraKleene(0))
 
-aff = AFN("(a|b)*aab")
+aff = AFN("(a|b)*abb")
 aff.MYT()
 print(aff.toAFD())
 
