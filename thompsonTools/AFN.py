@@ -13,6 +13,7 @@ class AFN:
         self.regex = regex
         self.statesNo = 0
         self.afn = None
+        self.afd = None
 
     def MYT(self):
         formatt = Format(self.regex)
@@ -226,18 +227,30 @@ class AFN:
                 for state in afdT.values():
                         toDo.append(state)
                 checked.append(name)
-                afd[counter] = StateAFD(name, afdT)
+                afd[counter] = StateAFD(name, afdT, True) if counter == 0 else StateAFD(name, afdT)
                 counter += 1
-        return afd
+
+        for i in range(len(afd)):
+            if afn.end in afd[i].name:
+                afd[i].accepting = True
+        self.afd = afd
 
 
     def createNewStates(self):
-        states = {state.name for state in self.toAFD()}
-        letters = {f'q{i}': state for i, state in enumerate(states)}
+        sts = []
+        afd = self.afd
+        for i in range(len(afd)):
+            if afd[i].name not in sts:
+                sts.append(afd[i].name)
+        
+        letters = {}
+        for i in range(len(sts)):
+            letters[chr(65+i)] = sts[i]
         return letters
     
+
     def assignStates(self):
-        afd = self.toAFD()
+        afd = self.afd
         letters = self.createNewStates()
         for i in range(len(afd)):
             for k, v in letters.items():
@@ -247,10 +260,25 @@ class AFN:
                 for k2, v2 in letters.items():
                     if v == v2:
                         afd[i].transitions[k] = k2
-        self.afd = afd
+        return afd
 
-            
 
+    def draw_afd(self):
+        afd = self.assignStates()
+
+        graph = pydot.Dot(graph_type='digraph', strict=True)
+        graph.set_rankdir('LR')
+
+        for state in afd.values():
+            for k, v in state.transitions.items():
+                if state.start:
+                    graph.add_node(pydot.Node(str(state.name), color='green', style='filled', shape='circle'))                                               
+                if state.accepting:
+                    graph.add_node(pydot.Node(str(state.name), shape='doublecircle'))
+                else:
+                    graph.add_node(pydot.Node(str(v)))
+                graph.add_edge(pydot.Edge(str(state.name), str(v), label=k))
+        graph.write_png('afnToafd.png', encoding='utf-8')
 
             
 
@@ -271,8 +299,8 @@ class AFN:
 
 aff = AFN("(a|b)*abb")
 aff.MYT()
-# print(aff.toAFD())
-aff.assignStates()
+aff.toAFD()
+aff.draw_afd()
 
 
         
