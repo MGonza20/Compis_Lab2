@@ -231,18 +231,23 @@ class AFN:
         return afd
 
 
-    def assignLetters(self):
-        sts = []
-        afd = self.toAFD()
-        for i in range(len(afd)):
-            if afd[i].name not in sts:
-                sts.append(afd[i].name)
-        
-        letters = {}
-        for i in range(len(sts)):
-            letters[chr(65+i)] = sts[i]
+    def createNewStates(self):
+        states = {state.name for state in self.toAFD()}
+        letters = {f'q{i}': state for i, state in enumerate(states)}
         return letters
     
+    def assignStates(self):
+        afd = self.toAFD()
+        letters = self.createNewStates()
+        for i in range(len(afd)):
+            for k, v in letters.items():
+                if afd[i].name == v:
+                    afd[i].name = k
+            for k, v in afd[i].transitions.items():
+                for k2, v2 in letters.items():
+                    if v == v2:
+                        afd[i].transitions[k] = k2
+        self.afd = afd
 
             
 
@@ -267,7 +272,7 @@ class AFN:
 aff = AFN("(a|b)*abb")
 aff.MYT()
 # print(aff.toAFD())
-aff.assignLetters()
+aff.assignStates()
 
 
         
