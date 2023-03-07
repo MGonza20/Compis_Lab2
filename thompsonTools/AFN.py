@@ -205,11 +205,11 @@ class AFN:
     
     def manyMove(self, states, symbol):
         move = [self.mover(state, symbol) for state in states]
-        return sum(move, [])
+        return list(set(sum(move, [])))
     
     def manyKleene(self, states):
         kleene = [self.cerraduraKleene(state) for state in states]
-        return sum(kleene, [])
+        return list(set(sum(kleene, [])))
         
 
     def toAFD(self, counter=0):
@@ -299,7 +299,7 @@ class AFN:
 # aff.MYT()
 # print(aff.cerraduraKleene(0))
 
-aff = AFN("ab*ab*")
+aff = AFN("0?(1?)?0*")
 aff.MYT()
 aff.toAFD()
 aff.draw_afd()
