@@ -225,7 +225,8 @@ class AFN:
             if name not in checked:
                 afdT = {symbol : self.manyKleene(self.manyMove(name, symbol)) for symbol in symbols}
                 for state in afdT.values():
-                        toDo.append(state)
+                        if len(state) > 0:
+                            toDo.append(state)
                 checked.append(name)
                 afd[counter] = StateAFD(name, afdT, True) if counter == 0 else StateAFD(name, afdT)
                 counter += 1
@@ -242,7 +243,6 @@ class AFN:
         for i in range(len(afd)):
             if afd[i].name not in sts:
                 sts.append(afd[i].name)
-        
         letters = {}
         for i in range(len(sts)):
             letters[chr(65+i)] = sts[i]
@@ -260,6 +260,8 @@ class AFN:
                 for k2, v2 in letters.items():
                     if v == v2:
                         afd[i].transitions[k] = k2
+                    elif not v:
+                        afd[i].transitions[k] = 'estado muerto'
         return afd
 
 
@@ -297,7 +299,7 @@ class AFN:
 # aff.MYT()
 # print(aff.cerraduraKleene(0))
 
-aff = AFN("(a|b)*abb")
+aff = AFN("ab*ab*")
 aff.MYT()
 aff.toAFD()
 aff.draw_afd()
