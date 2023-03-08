@@ -8,7 +8,7 @@ class Format:
     def prec(self, value):
         return 5 if value.isalnum() else self.sims[value]
     
-    def fromPositiveToKleene(self):
+    def identitiesSus(self):
         string = self.regex
 
         for i in range(len(string)):
@@ -22,11 +22,28 @@ class Format:
                 j = i-1
                 while string[j] != '(':
                     j -= 1
-                    
+
                 middle = string[j:i]*2
                 before = string[:j]
                 after = string[i+1:]
                 string = f'{before}{middle}*{after}'
+
+            if string[i] == '?' and string[i-1].isalnum():
+                middle = string[i-1]
+                before = string[:i-1]
+                after = string[i+1:]
+                string = f'{before}({middle}|ε){after}'
+
+            elif string[i] == '?' and string[i-1] == ')':
+                j = i-1
+                while string[j] != '(':
+                    j -= 1
+
+                middle = string[j:i]
+                before = string[:j]
+                after = string[i+1:]
+                string = f'{before}({middle}|ε){after}'
+            
         return string
         
     
@@ -84,5 +101,5 @@ class Format:
         return postfix
 
 
-a = Format("max+bje(13)+2")
-print(a.fromPositiveToKleene())
+a = Format("123x++456")
+print(a.identitiesSus())
