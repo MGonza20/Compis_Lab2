@@ -10,24 +10,23 @@ class Format:
     
     def fromPositiveToKleene(self):
         string = self.regex
+
         for i in range(len(string)):
-            before = ""
-            after = ""
             if string[i] == '+' and string[i-1].isalnum():
+                middle = string[i-1]*2
                 before = string[:i-1]
                 after = string[i+1:]
-                string = before + string[i-1]*2 + '*' + after
+                string = f'{before}{middle}*{after}'
+
             elif string[i] == '+' and string[i-1] == ')':
-                parenVal = ""
-                before = ""
-                after = ""
-                for j in range(i-1, -1, -1):
-                    if string[j] == '(':
-                        for k in range(j, i):
-                            parenVal += string[k]
-                        before = string[:j]
-                        after = string[i+1:]
-                string = before + parenVal*2 + '*' + after
+                j = i-1
+                while string[j] != '(':
+                    j -= 1
+                    
+                middle = string[j:i]*2
+                before = string[:j]
+                after = string[i+1:]
+                string = f'{before}{middle}*{after}'
         return string
         
     
