@@ -161,7 +161,6 @@ class AFN:
 
 
         self.afn = stack.pop()
-
         return self.afn
 
 

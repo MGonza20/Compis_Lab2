@@ -7,7 +7,30 @@ class Format:
 
     def prec(self, value):
         return 5 if value.isalnum() else self.sims[value]
+    
+    def fromPositiveToKleene(self):
+        string = self.regex
+        for i in range(len(string)):
+            before = ""
+            after = ""
+            if string[i] == '+' and string[i-1].isalnum():
+                before = string[:i-1]
+                after = string[i+1:]
+                string = before + string[i-1]*2 + '*' + after
+            elif string[i] == '+' and string[i-1] == ')':
+                parenVal = ""
+                before = ""
+                after = ""
+                for j in range(i-1, -1, -1):
+                    if string[j] == '(':
+                        for k in range(j, i):
+                            parenVal += string[k]
+                        before = string[:j]
+                        after = string[i+1:]
+                string = before + parenVal*2 + '*' + after
+        return string
         
+    
 
     def concat(self):
         newRegex, ops = "", list(self.sims.keys())
@@ -61,3 +84,6 @@ class Format:
             postfix += stack.pop()
         return postfix
 
+
+a = Format("max+bje(13)+2")
+print(a.fromPositiveToKleene())
