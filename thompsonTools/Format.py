@@ -30,6 +30,8 @@ class Format:
                         while leftParen != countParen:
                             if string[j] == '(':
                                 countParen += 1
+                            elif string[j-1] == ')':
+                                countParen -= 1
                             j -= 1
 
                         before = string[:j+1]
@@ -65,6 +67,8 @@ class Format:
                         while leftParen != countParen:
                             if string[j] == '(':
                                 countParen += 1
+                            elif string[j-1] == ')':
+                                countParen -= 1
                             j -= 1
 
                         before = string[:j+1]
