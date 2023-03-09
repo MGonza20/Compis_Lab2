@@ -22,24 +22,31 @@ class Format:
 
     def selectZeroOrOneParen(self):
         expression = self.regex
-        for i in range(len(expression)):
-            if expression[i] == '?':
-                if expression[i-1] == ')':
-                    j = i-2
-                    continuee = True
-                    closeParen = 1
-                    while continuee:
-                        if expression[j] == ')':
-                            closeParen += 1
-                        elif expression[j] == '(':
-                            closeParen -= 1
-                        j -= 1
-                        if closeParen == 0:
-                            continuee = False
-                    expression = expression[j+1:i]
-        self.regex = expression
+        while '?' in expression:
+            for i in range(len(expression)):
+                
+                if expression[i] == '?':
+                    if expression[i-1] == ')':
+                        j = i-2
+                        continuee = True
+                        closeParen = 1
+                        while continuee:
+                            if expression[j] == ')':
+                                closeParen += 1
+                            elif expression[j] == '(':
+                                closeParen -= 1
+                            j -= 1
+                            if closeParen == 0:
+                                continuee = False
+                        expression = f'{expression[:j+1]}{expression[j+1:i]}{expression[j+1:i]}*{expression[i+1:]}'
 
-                    # expression = expression[:j] + expression[j:i] + expression[i+1:]
+                    elif expression[i-1].isalnum():
+                        before = expression[:i-1]
+                        after = expression[i+1:]
+                        middle = expression[i-1]*2
+                        expression = f'{before}{middle}*{after}'    
+            self.regex = expression
+
 
 
     
@@ -98,7 +105,7 @@ class Format:
 
 
 
-a = Format("a((a|b)(a)aaaaa|b)?")
+a = Format("a((s+m)|2)?hol?a")
 # a.zeroOrOneSus()
 # a.positiveSus()
 # print(a.regex)
