@@ -8,7 +8,7 @@ class Format:
     def prec(self, value):
         return 5 if value.isalnum() else self.sims[value]
     
-    
+
     def positiveSus(self):
         string = self.regex
         stack = []
@@ -41,8 +41,42 @@ class Format:
                     sus = stack.pop(0)
                     sus = sus*2
                     string = f'{before}({sus}*){after}'
-        return string
+        self.regex = string
 
+
+    def zeroOrOneSus(self):
+        string = self.regex
+        stack = []
+        while string.count('?') > 0:
+            for i in range(len(string)):
+                actual = string[i]
+                if string[i] == '?':
+                    if string[i-1].isalnum():
+                        before = string[:i-1]
+                        middle = string[i-1]
+                        after = string[i+1:]
+                        stack.append(middle)
+
+                    elif string[i-1] == ')':
+                        j = i-1
+                        leftParen = string.count('(')
+                        countParen = 0
+
+                        while leftParen != countParen:
+                            if string[j] == '(':
+                                countParen += 1
+                            j -= 1
+
+                        before = string[:j+1]
+                        middle = string[j+1:i]
+                        after = string[i+1:]
+                        stack.append(middle)
+
+                if  stack:
+                    sus = stack.pop(0)
+                    sus = f'({sus}|ε)'
+                    string = f'{before}{sus}{after}'
+        self.regex = string
 
     
 
@@ -99,5 +133,8 @@ class Format:
         return postfix
 
 
-a = Format("123x???456")
-print(a.zeroOrOneSus())
+
+a = Format("123x?+456")
+a.zeroOrOneSus()
+a.positiveSus()
+print(a.regex)
