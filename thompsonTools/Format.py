@@ -24,7 +24,7 @@ class Format:
         expression = self.regex
         while '?' in expression:
             for i in range(len(expression)):
-                
+
                 if expression[i] == '?':
                     if expression[i-1] == ')':
                         j = i-2
@@ -38,7 +38,7 @@ class Format:
                             j -= 1
                             if closeParen == 0:
                                 continuee = False
-                        expression = f'{expression[:j+1]}{expression[j+1:i]}{expression[j+1:i]}*{expression[i+1:]}'
+                        expression = f'{expression[:j+1]}{expression[j+1:i]*2}*{expression[i+1:]}'
 
                     elif expression[i-1].isalnum():
                         before = expression[:i-1]
@@ -105,7 +105,7 @@ class Format:
 
 
 
-a = Format("a((s+m)|2)?hol?a")
+a = Format("a((s(ma)?)?hol?a")
 # a.zeroOrOneSus()
 # a.positiveSus()
 # print(a.regex)
