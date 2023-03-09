@@ -28,16 +28,18 @@ class Format:
                         leftParen = string.count('(', 0, i)
                         countParen = 0
                         lastParenI = -20
+                        access = False
 
                         while leftParen != countParen:
                             if string[j] == '(':
                                 countParen += 1
                                 lastParenI = j
-                            if string[j] == '*':
+                            if string[j] == '*' and string[j+2] != '+' and not string[j+2].isalnum():
+                                access = True
                                 break
                             j -= 1
 
-                        if lastParenI != -20:
+                        if access:
                             j = lastParenI-1
 
                         before = string[:j+1]
@@ -69,11 +71,18 @@ class Format:
                         j = i-1
                         leftParen = string.count('(', 0, i)
                         countParen = 0
+                        lastParenI = -20
 
                         while leftParen != countParen:
                             if string[j] == '(':
                                 countParen += 1
+                                lastParenI = j
+                            if string[j] == '*':
+                                break
                             j -= 1
+
+                        if lastParenI != -20:
+                            j = lastParenI-1
 
                         before = string[:j+1]
                         middle = string[j+1:i]
@@ -142,7 +151,7 @@ class Format:
 
 
 
-a = Format("(a|b)+(ab)+c?")
+a = Format("(a|b)+++")
 a.zeroOrOneSus()
 a.positiveSus()
 print(a.regex)
