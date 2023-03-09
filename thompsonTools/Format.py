@@ -20,91 +20,27 @@ class Format:
         self.regex = regexStr
 
 
-    def positiveSus(self):
-        string = self.regex
-        stack = []
-        while string.count('+') > 0:
-            for i in range(len(string)):
-                actual = string[i]
-                if string[i] == '+':
+    def selectZeroOrOneParen(self):
+        expression = self.regex
+        for i in range(len(expression)):
+            if expression[i] == '?':
+                if expression[i-1] == ')':
+                    j = i-2
+                    continuee = True
+                    closeParen = 1
+                    while continuee:
+                        if expression[j] == ')':
+                            closeParen += 1
+                        elif expression[j] == '(':
+                            closeParen -= 1
+                        j -= 1
+                        if closeParen == 0:
+                            continuee = False
+                    expression = expression[j+1:i]
+        self.regex = expression
 
-                    if string[i-1].isalnum():
-                        before = string[:i-1]
-                        middle = string[i-1]
-                        after = string[i+1:]
-                        stack.append(middle)
+                    # expression = expression[:j] + expression[j:i] + expression[i+1:]
 
-                    elif string[i-1] == ')':
-                        j = i-1
-                        leftParen = string.count('(', 0, i)
-                        countParen = 0
-                        lastParenI = -20
-                        access = False
-
-                        while leftParen != countParen:
-                            if string[j] == '(':
-                                countParen += 1
-                                lastParenI = j
-                            if string[j] == '*' and string[j+2] != '+' and not string[j+2].isalnum():
-                                access = True
-                                break
-                            j -= 1
-
-                        if access:
-                            j = lastParenI-1
-
-                        before = string[:j+1]
-                        middle = string[j+1:i]
-                        after = string[i+1:]
-                        stack.append(middle)
-
-                if  stack:
-                    sus = stack.pop(0)
-                    sus = sus*2
-                    string = f'{before}({sus}*){after}'
-        self.regex = string
-
-
-    def zeroOrOneSus(self):
-        string = self.regex
-        stack = []
-        while string.count('?') > 0:
-            for i in range(len(string)):
-                actual = string[i]
-                if string[i] == '?':
-                    if string[i-1].isalnum():
-                        before = string[:i-1]
-                        middle = string[i-1]
-                        after = string[i+1:]
-                        stack.append(middle)
-
-                    elif string[i-1] == ')':
-                        j = i-1
-                        leftParen = string.count('(', 0, i)
-                        countParen = 0
-                        lastParenI = -20
-
-                        while leftParen != countParen:
-                            if string[j] == '(':
-                                countParen += 1
-                                lastParenI = j
-                            if string[j] == '*':
-                                break
-                            j -= 1
-
-                        if lastParenI != -20:
-                            j = lastParenI-1
-
-                        before = string[:j+1]
-                        middle = string[j+1:i]
-                        after = string[i+1:]
-                        stack.append(middle)
-
-                if  stack:
-                    sus = stack.pop(0)
-                    sus = f'({sus}|ε)'
-                    string = f'{before}{sus}{after}'
-        self.regex = string
 
     
 
@@ -162,9 +98,9 @@ class Format:
 
 
 
-a = Format("??a+??+abak+??++abak+++??+++??++++??+++ah++")
+a = Format("a((a|b)(a)aaaaa|b)?")
 # a.zeroOrOneSus()
 # a.positiveSus()
 # print(a.regex)
-a.idempotenciesApp()
+a.selectZeroOrOneParen()
 print(a.regex)
