@@ -16,33 +16,39 @@ class Format:
                 middle = string[i-1]*2
                 before = string[:i-1]
                 after = string[i+1:]
-                string = f'{before}{middle}*{after}'
+                string = f'{before}({middle}*){after}'
 
             elif string[i] == '+' and string[i-1] == ')':
+
+                lParen = string.count('(')
+                cParen = 0
                 j = i-1
-                while string[j] != '(':
+                while string[j] != '(' and lParen != cParen:
+                    if string[j] == '(':
+                        cParen +=1
+
                     j -= 1
 
                 middle = string[j:i]*2
                 before = string[:j]
                 after = string[i+1:]
-                string = f'{before}{middle}*{after}'
+                string = f'{before}({middle}*){after}'
 
-            if string[i] == '?' and string[i-1].isalnum():
-                middle = string[i-1]
-                before = string[:i-1]
-                after = string[i+1:]
-                string = f'{before}({middle}|ε){after}'
+            # if string[i] == '?' and string[i-1].isalnum():
+            #     middle = string[i-1]
+            #     before = string[:i-1]
+            #     after = string[i+1:]
+            #     string = f'{before}({middle}|ε){after}'
 
-            elif string[i] == '?' and string[i-1] == ')':
-                j = i-1
-                while string[j] != '(':
-                    j -= 1
+            # elif string[i] == '?' and string[i-1] == ')':
+            #     j = i-1
+            #     while string[j] != '(':
+            #         j -= 1
 
-                middle = string[j:i]
-                before = string[:j]
-                after = string[i+1:]
-                string = f'{before}({middle}|ε){after}'
+            #     middle = string[j:i]
+            #     before = string[:j]
+            #     after = string[i+1:]
+            #     string = f'{before}({middle}|ε){after}'
             
         return string
         
@@ -101,5 +107,5 @@ class Format:
         return postfix
 
 
-a = Format("123x++456")
+a = Format("123x+++456")
 print(a.identitiesSus())
