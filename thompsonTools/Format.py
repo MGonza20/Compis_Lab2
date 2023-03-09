@@ -7,7 +7,18 @@ class Format:
 
     def prec(self, value):
         return 5 if value.isalnum() else self.sims[value]
-    
+
+
+    def idempotenciesApp(self):
+        regexStr = self.regex
+        i = 0
+        while i < len(regexStr)-1:
+            if regexStr[i] == regexStr[i+1] and regexStr[i] in "+?":
+                regexStr = regexStr[:i] + regexStr[i+1:]
+            else:
+                i += 1
+        self.regex = regexStr
+
 
     def positiveSus(self):
         string = self.regex
@@ -151,7 +162,9 @@ class Format:
 
 
 
-a = Format("(a|b)+++")
-a.zeroOrOneSus()
-a.positiveSus()
+a = Format("??a+??+abak+??++abak+++??+++??++++??+++ah++")
+# a.zeroOrOneSus()
+# a.positiveSus()
+# print(a.regex)
+a.idempotenciesApp()
 print(a.regex)
