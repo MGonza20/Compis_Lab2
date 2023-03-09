@@ -10,29 +10,61 @@ class Format:
     
     def identitiesSus(self):
         string = self.regex
-
         for i in range(len(string)):
-            if string[i] == '+' and string[i-1].isalnum():
-                middle = string[i-1]*2
-                before = string[:i-1]
-                after = string[i+1:]
-                string = f'{before}({middle}*){after}'
+            actualSym = string[i]
+            if string[i] == '+':
+                if string[i-1].isalnum():
+                    middle = string[i-1]*2
+                    before = string[:i-1]
+                    after = string[i+1:]
+                    self.regex = f'{before}({middle}*){after}'
+                    self.identitiesSus()
+                elif string[i-1] == ')':
+                    j = i-1
+                    while string[j] != '(':
+                        j -= 1
+                    middle = string[j:i]*2
+                    before = string[:j]
+                    after = string[i+1:]
+                    self.regex = f'{before}({middle}*){after}'
+                    self.identitiesSus()
+        # replace ? with '('+previousChar+'|ε)'
 
 
-            elif string[i] == '+' and string[i-1] == ')':
+        # for i in range(len(string)):
+        #     if string[i] == '+':
+        #         if string[i-1].isalnum():
+                    
+            #     elif string[i-1] == ')':
+            #         j = i-1
+            #         while string[j] != '(':
+            #             j -= 1
+            #         newString += f'({string[j:i]}*)'
+            # else:
+            #     newString += string[i]
 
-                lParen = string.count('(')
-                cParen = 0
-                j = i-1
-                while string[j] != '(' and lParen != cParen:
-                    if string[j] == '(':
-                        cParen +=1
-                    j -= 1
+        # for i in range(len(string)):
+        #     if string[i] == '+' and string[i-1].isalnum():
+        #         middle = string[i-1]*2
+        #         before = string[:i-1]
+        #         after = string[i+1:]
+        #         string = f'{before}({middle}*){after}'
 
-                middle = string[j:i]*2
-                before = string[:j]
-                after = string[i+1:]
-                string = f'{before}({middle}*){after}'
+
+        #     elif string[i] == '+' and string[i-1] == ')':
+
+        #         lParen = string.count('(')
+        #         cParen = 0
+        #         j = i-1
+        #         while string[j] != '(' and lParen != cParen:
+        #             if string[j] == '(':
+        #                 cParen +=1
+        #             j -= 1
+
+        #         middle = string[j:i]*2
+        #         before = string[:j]
+        #         after = string[i+1:]
+        #         string = f'{before}({middle}*){after}'
 
             # if string[i] == '?' and string[i-1].isalnum():
             #     middle = string[i-1]
@@ -50,7 +82,7 @@ class Format:
             #     after = string[i+1:]
             #     string = f'{before}({middle}|ε){after}'
             
-        return string
+        return self.regex
         
     
 
