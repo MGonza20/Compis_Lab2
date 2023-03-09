@@ -10,25 +10,37 @@ class Format:
     
     def identitiesSus(self):
         string = self.regex
-        for i in range(len(string)):
-            actualSym = string[i]
-            if string[i] == '+':
-                if string[i-1].isalnum():
-                    middle = string[i-1]*2
-                    before = string[:i-1]
-                    after = string[i+1:]
-                    self.regex = f'{before}({middle}*){after}'
-                    self.identitiesSus()
-                elif string[i-1] == ')':
-                    j = i-1
-                    while string[j] != '(':
-                        j -= 1
-                    middle = string[j:i]*2
-                    before = string[:j]
-                    after = string[i+1:]
-                    self.regex = f'{before}({middle}*){after}'
-                    self.identitiesSus()
-        # replace ? with '('+previousChar+'|ε)'
+        stack = []
+        while string.count('+') > 0:
+            for i in range(len(string)):
+                if string[i] == '+':
+                    if string[i-1].isalnum():
+                        before = string[:i-1]
+                        middle = string[i-1]
+                        stack.append(middle)
+                        after = string[i+1:]
+                    elif string[i-1] == ')':
+                        j = i-1
+                        # leftmost parenthesis
+                        leftParen = string.count('(')
+                        countParen = 0
+ 
+                        while leftParen != countParen:
+                            if string[j] == '(':
+                                countParen += 1
+                            j -= 1
+                        # while string[j] != '(':
+                        #     j -= 1
+                        before = string[:j+1]
+                        middle = string[j+1:i]
+                        stack.append(middle)
+                        after = string[i+1:]
+
+                if  stack:
+                    sus = stack.pop(0)
+                    sus = sus*2
+                    string = f'{before}({sus}*){after}'
+
 
 
         # for i in range(len(string)):
@@ -82,7 +94,7 @@ class Format:
             #     after = string[i+1:]
             #     string = f'{before}({middle}|ε){after}'
             
-        return self.regex
+        return string
         
     
 
