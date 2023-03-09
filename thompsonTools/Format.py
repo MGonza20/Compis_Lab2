@@ -14,6 +14,7 @@ class Format:
         stack = []
         while string.count('+') > 0:
             for i in range(len(string)):
+                actual = string[i]
                 if string[i] == '+':
 
                     if string[i-1].isalnum():
@@ -24,15 +25,25 @@ class Format:
 
                     elif string[i-1] == ')':
                         j = i-1
-                        leftParen = string.count('(')
+                        leftParen = string.count('(', 0, i)
                         countParen = 0
+                        lastParenI = -20
 
                         while leftParen != countParen:
                             if string[j] == '(':
                                 countParen += 1
-                            elif string[j-1] == ')':
-                                countParen -= 1
+                                # strJ = string[j]
+                                # ind = string.index(13)
+                                lastParenI = j
+                                # j += 1
+                            # elif string[j-1] == ')':
+                            #     leftParen -= 1
+                            if string[j] == '*':
+                                break
                             j -= 1
+
+                        if lastParenI != -20:
+                            j = lastParenI-1
 
                         before = string[:j+1]
                         middle = string[j+1:i]
@@ -61,14 +72,14 @@ class Format:
 
                     elif string[i-1] == ')':
                         j = i-1
-                        leftParen = string.count('(')
+                        leftParen = string.count('(', 0, i)
                         countParen = 0
 
                         while leftParen != countParen:
                             if string[j] == '(':
                                 countParen += 1
-                            elif string[j-1] == ')':
-                                countParen -= 1
+                            # elif string[j-1] == ')':
+                            #     countParen -= 1
                             j -= 1
 
                         before = string[:j+1]
@@ -138,7 +149,7 @@ class Format:
 
 
 
-a = Format("123x?+456")
+a = Format("(a|b)+(ab)+c?")
 a.zeroOrOneSus()
 a.positiveSus()
 print(a.regex)
