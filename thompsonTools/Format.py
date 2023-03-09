@@ -8,94 +8,42 @@ class Format:
     def prec(self, value):
         return 5 if value.isalnum() else self.sims[value]
     
-    def identitiesSus(self):
+    
+    def positiveSus(self):
         string = self.regex
         stack = []
         while string.count('+') > 0:
             for i in range(len(string)):
                 if string[i] == '+':
+
                     if string[i-1].isalnum():
                         before = string[:i-1]
                         middle = string[i-1]
-                        stack.append(middle)
                         after = string[i+1:]
+                        stack.append(middle)
+
                     elif string[i-1] == ')':
                         j = i-1
-                        # leftmost parenthesis
                         leftParen = string.count('(')
                         countParen = 0
- 
+
                         while leftParen != countParen:
                             if string[j] == '(':
                                 countParen += 1
                             j -= 1
-                        # while string[j] != '(':
-                        #     j -= 1
+
                         before = string[:j+1]
                         middle = string[j+1:i]
-                        stack.append(middle)
                         after = string[i+1:]
+                        stack.append(middle)
 
                 if  stack:
                     sus = stack.pop(0)
                     sus = sus*2
                     string = f'{before}({sus}*){after}'
-
-
-
-        # for i in range(len(string)):
-        #     if string[i] == '+':
-        #         if string[i-1].isalnum():
-                    
-            #     elif string[i-1] == ')':
-            #         j = i-1
-            #         while string[j] != '(':
-            #             j -= 1
-            #         newString += f'({string[j:i]}*)'
-            # else:
-            #     newString += string[i]
-
-        # for i in range(len(string)):
-        #     if string[i] == '+' and string[i-1].isalnum():
-        #         middle = string[i-1]*2
-        #         before = string[:i-1]
-        #         after = string[i+1:]
-        #         string = f'{before}({middle}*){after}'
-
-
-        #     elif string[i] == '+' and string[i-1] == ')':
-
-        #         lParen = string.count('(')
-        #         cParen = 0
-        #         j = i-1
-        #         while string[j] != '(' and lParen != cParen:
-        #             if string[j] == '(':
-        #                 cParen +=1
-        #             j -= 1
-
-        #         middle = string[j:i]*2
-        #         before = string[:j]
-        #         after = string[i+1:]
-        #         string = f'{before}({middle}*){after}'
-
-            # if string[i] == '?' and string[i-1].isalnum():
-            #     middle = string[i-1]
-            #     before = string[:i-1]
-            #     after = string[i+1:]
-            #     string = f'{before}({middle}|ε){after}'
-
-            # elif string[i] == '?' and string[i-1] == ')':
-            #     j = i-1
-            #     while string[j] != '(':
-            #         j -= 1
-
-            #     middle = string[j:i]
-            #     before = string[:j]
-            #     after = string[i+1:]
-            #     string = f'{before}({middle}|ε){after}'
-            
         return string
-        
+
+
     
 
     def concat(self):
@@ -151,5 +99,5 @@ class Format:
         return postfix
 
 
-a = Format("123x+++456")
-print(a.identitiesSus())
+a = Format("123x???456")
+print(a.zeroOrOneSus())
