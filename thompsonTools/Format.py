@@ -13,10 +13,10 @@ class Format:
 
         for i in range(len(string)):
             if string[i] == '+' and string[i-1].isalnum():
-                middle = string[i-1]*2
+                middle = string[i-1]
                 before = string[:i-1]
                 after = string[i+1:]
-                string = f'{before}({middle}*){after}'
+                string = f'{before}({middle}{middle}*){after}'
 
             elif string[i] == '+' and string[i-1] == ')':
 
@@ -29,10 +29,10 @@ class Format:
 
                     j -= 1
 
-                middle = string[j:i]*2
+                middle = string[j:i]
                 before = string[:j]
                 after = string[i+1:]
-                string = f'{before}({middle}*){after}'
+                string = f'{before}({middle}{middle}*){after}'
 
             # if string[i] == '?' and string[i-1].isalnum():
             #     middle = string[i-1]
