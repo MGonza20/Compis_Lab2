@@ -20,7 +20,7 @@ class Format:
         self.regex = regexStr
 
 
-    def zeroOrOneId(self):
+    def positiveId(self):
         expression = self.regex
         while '+' in expression:
             for i in range(len(expression)):
@@ -38,13 +38,41 @@ class Format:
                             j -= 1
                             if closeParen == 0:
                                 continuee = False
-                        expression = f'{expression[:j+1]}({expression[j+1:i]*2}*){expression[i+1:]}'
+                        expression = f'{expression[:j+1]}{expression[j+1:i]*2}*{expression[i+1:]}'
 
                     elif expression[i-1].isalnum():
                         before = expression[:i-1]
                         after = expression[i+1:]
                         middle = expression[i-1]*2
-                        expression = f'{before}({middle}*){after}'    
+                        expression = f'{before}{middle}*{after}'    
+            self.regex = expression
+
+    
+    def zeroOrOneId(self):
+        expression = self.regex
+        while '?' in expression:
+            for i in range(len(expression)):
+
+                if expression[i] == '?':
+                    if expression[i-1] == ')':
+                        j = i-2
+                        continuee = True
+                        closeParen = 1
+                        while continuee:
+                            if expression[j] == ')':
+                                closeParen += 1
+                            elif expression[j] == '(':
+                                closeParen -= 1
+                            j -= 1
+                            if closeParen == 0:
+                                continuee = False
+                        expression = f'{expression[:j+1]}({expression[j+1:i]}|ε){expression[i+1:]}'
+
+                    elif expression[i-1].isalnum():
+                        before = expression[:i-1]
+                        after = expression[i+1:]
+                        middle = expression[i-1]
+                        expression = f'{before}({middle}|ε){after}'    
             self.regex = expression
 
 
@@ -105,9 +133,10 @@ class Format:
 
 
 
-a = Format("(a)x++++c++d")
+a = Format("(a|b)+c+(d|q)?e")
 # a.zeroOrOneSus()
 # a.positiveSus()
 # print(a.regex)
 a.zeroOrOneId()
+a.positiveId()
 print(a.regex)
