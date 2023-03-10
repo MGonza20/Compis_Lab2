@@ -76,9 +76,6 @@ class Format:
             self.regex = expression
 
 
-
-    
-
     def concat(self):
         newRegex, ops = "", list(self.sims.keys())
         ops.remove('(')
@@ -133,10 +130,12 @@ class Format:
 
 
 
-a = Format("(a|b)+c+(d|q)?e")
+a = Format("12c++(d|q)??e")
 # a.zeroOrOneSus()
 # a.positiveSus()
 # print(a.regex)
+a.idempotenciesApp()
 a.zeroOrOneId()
 a.positiveId()
+print(a.infixPostfix())
 print(a.regex)
