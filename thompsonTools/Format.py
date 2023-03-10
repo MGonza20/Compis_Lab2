@@ -20,12 +20,12 @@ class Format:
         self.regex = regexStr
 
 
-    def selectZeroOrOneParen(self):
+    def zeroOrOneId(self):
         expression = self.regex
-        while '?' in expression:
+        while '+' in expression:
             for i in range(len(expression)):
 
-                if expression[i] == '?':
+                if expression[i] == '+':
                     if expression[i-1] == ')':
                         j = i-2
                         continuee = True
@@ -38,13 +38,13 @@ class Format:
                             j -= 1
                             if closeParen == 0:
                                 continuee = False
-                        expression = f'{expression[:j+1]}{expression[j+1:i]*2}*{expression[i+1:]}'
+                        expression = f'{expression[:j+1]}({expression[j+1:i]*2}*){expression[i+1:]}'
 
                     elif expression[i-1].isalnum():
                         before = expression[:i-1]
                         after = expression[i+1:]
                         middle = expression[i-1]*2
-                        expression = f'{before}{middle}*{after}'    
+                        expression = f'{before}({middle}*){after}'    
             self.regex = expression
 
 
@@ -105,9 +105,9 @@ class Format:
 
 
 
-a = Format("a((s(ma)?)?hol?a")
+a = Format("(a)x++++c++d")
 # a.zeroOrOneSus()
 # a.positiveSus()
 # print(a.regex)
-a.selectZeroOrOneParen()
+a.zeroOrOneId()
 print(a.regex)
