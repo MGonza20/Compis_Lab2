@@ -33,6 +33,7 @@ class AFD:
         subexpr_stack = []  # stack to keep track of sub-expressions inside parentheses
 
         for i in range(len(regex)):
+            rrrr = regex[i]
             if len(toDo) > 0:
                 if toDo[-1] == '|':
                     if len(tree) > 1:
@@ -50,7 +51,7 @@ class AFD:
                         l.parent = newSymC
                         r.parent = newSymC
                         tree.append(newSymC)
-            if regex[i].isalnum():
+            if regex[i].isalnum() or regex[i] == '#':
                 tree.append(Node(regex[i], no=enum))
                 enum += 1
             elif regex[i] == '(':
@@ -76,9 +77,30 @@ class AFD:
             elif regex[i] == '|' or regex[i] == '.':
                 if len(tree) < 2:
                     toDo.append(regex[i])
-        return tree
 
+        while toDo and tree:
+            if toDo[-1] == '|':
+                if len(tree) > 1:
+                    l = tree.pop(0)
+                    r = tree.pop(0)
+                    newSymU = Node(toDo.pop(), left=l, right=r)
+                    l.parent = newSymU
+                    r.parent = newSymU
+                    tree.append(newSymU)
+            elif toDo[-1] == '.':
+                if len(tree) > 1:
+                    l = tree.pop(0)
+                    r = tree.pop(0)
+                    newSymC = Node(toDo.pop(), left=l, right=r)
+                    l.parent = newSymC
+                    r.parent = newSymC
+                    tree.append(newSymC)
+        return tree
     
+
+
+
+
 
 afdd = AFD('(a|b)+abc?')
 aa = afdd.syntaxTree()
