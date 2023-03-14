@@ -57,21 +57,25 @@ class AFD:
                 subexpr_stack.append(tree)  # push current subtree onto the stack
                 tree = []  # start a new subtree for the sub-expression inside parentheses
             elif regex[i] == ')':
+                # if regex[i+1] == '*':
+                #     if len(tree) > 0:
+                #         newSymK = Node(regex[i+1], left=tree[0])
+                #         tree[0].parent = newSymK
+                #         tree.append(newSymK)
+                #         i += 1
                 if len(subexpr_stack) > 0:
                     parent_tree = subexpr_stack.pop()  # pop the parent subtree from the stack
                     if len(tree) > 0:
-                        parent_tree.append(tree[0])  # add the current subtree as a child to the parent node
-                        if tree[0].symbol != parent_tree[-1].symbol: 
-                            tree[0].parent = parent_tree[-1]
+                        
+                        if regex[i+1] == '*':
+                            parent_tree.append(Node(regex[i+1], left=tree[0]))
+                            i += 1
+                        else:
+                            parent_tree.append(tree[0])  # add the current subtree as a child to the parent node
                     tree = parent_tree  # set the current subtree to the parent subtree
             elif regex[i] == '|' or regex[i] == '.':
                 if len(tree) < 2:
                     toDo.append(regex[i])
-            elif regex[i] == '*':
-                children = tree.pop(0)
-                newSym = Node(regex[i], left=children)
-                children.parent = newSym
-                tree.append(newSym)
         return tree
 
     
