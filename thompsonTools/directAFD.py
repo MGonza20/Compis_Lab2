@@ -29,8 +29,7 @@ class AFD:
         toDo = []
         enum = 0
         regex = self.augmentRegex()
-
-        subexpr_stack = []  # stack to keep track of sub-expressions inside parentheses
+        subexpr_stack = [] 
 
         for i in range(len(regex)):
             rrrr = regex[i]
@@ -55,25 +54,18 @@ class AFD:
                 tree.append(Node(regex[i], no=enum))
                 enum += 1
             elif regex[i] == '(':
-                subexpr_stack.append(tree)  # push current subtree onto the stack
-                tree = []  # start a new subtree for the sub-expression inside parentheses
+                subexpr_stack.append(tree)  
+                tree = []  
             elif regex[i] == ')':
-                # if regex[i+1] == '*':
-                #     if len(tree) > 0:
-                #         newSymK = Node(regex[i+1], left=tree[0])
-                #         tree[0].parent = newSymK
-                #         tree.append(newSymK)
-                #         i += 1
                 if len(subexpr_stack) > 0:
-                    parent_tree = subexpr_stack.pop()  # pop the parent subtree from the stack
+                    parent_tree = subexpr_stack.pop()  
                     if len(tree) > 0:
-                        
                         if regex[i+1] == '*':
                             parent_tree.append(Node(regex[i+1], left=tree[0]))
                             i += 1
                         else:
-                            parent_tree.append(tree[0])  # add the current subtree as a child to the parent node
-                    tree = parent_tree  # set the current subtree to the parent subtree
+                            parent_tree.append(tree[0])  
+                    tree = parent_tree  
             elif regex[i] == '|' or regex[i] == '.':
                 if len(tree) < 2:
                     toDo.append(regex[i])
