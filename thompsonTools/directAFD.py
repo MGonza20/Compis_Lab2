@@ -16,6 +16,8 @@ class Node:
 class AFD:
     def __init__(self, regex):
         self.regex = regex
+        self.tree = None
+        self.table = {}
 
     def augmentRegex(self):
         hashRegex = Format(self.regex + '#')
@@ -124,24 +126,6 @@ class AFD:
         return tree
 
 
-    def firstpos(self, tree):
-        if tree:
-            self.firstpos(tree.left)
-            self.firstpos(tree.right)
-            if tree.symbol.isalnum():
-                tree.firstpos.append(tree.no)
-            elif tree.symbol == '|':
-                tree.firstpos = tree.left.firstpos + tree.right.firstpos
-            elif tree.symbol == '.':
-                if tree.left.anulable:
-                    tree.firstpos = tree.left.firstpos + tree.right.firstpos
-                else:
-                    tree.firstpos = tree.left.firstpos
-            elif tree.symbol == '*':
-                tree.firstpos = tree.left.firstpos 
-        return tree                            
-
-
     def firstPosMethod(self, tree):
         if tree:
             self.firstPosMethod(tree.left)
@@ -177,14 +161,38 @@ class AFD:
                 tree.lastpos = tree.left.lastpos
         return tree
     
+    def genNextPosDict(self, tree):
+        if tree:
+            self.genNextPosDict(tree.left)
+            self.genNextPosDict(tree.right)
+            if tree.no or tree.no == 0:
+                self.table[tree.no] = {tree.symbol: []}
+
+
+    def genNextPos(self, tree):
+        if tree:
+            self.genNextPos(tree.left)
+            self.genNextPos(tree.right)
+            if tree.symbol == '.':
+                for i in tree.left.lastpos:
+                    for key in self.table[i]:
+                        self.table[i][key] += tree.right.firstpos
+            if tree.symbol == '*':
+                for i in tree.lastpos:
+                    for key in self.table[i]:
+                        self.table[i][key] += tree.firstpos
+
+        
+
+
 
 def printVisualTree(tree, level=0):
     if tree:
         printVisualTree(tree.right, level+1)
         if tree.no or tree.no == 0:
-            print('  '*(level*3) + str(tree.symbol) + str(tree.no) + ' ' + str(tree.lastpos))
+            print('  '*(level*3) + str(tree.symbol) + str(tree.no) + ' ' + str(tree.firstpos))
         else:
-            print('  '*(level*3) + str(tree.symbol) + ' ' + str(tree.lastpos))
+            print('  '*(level*3) + str(tree.symbol) + ' ' + str(tree.firstpos))
         printVisualTree(tree.left, level+1)
 
 
@@ -200,7 +208,15 @@ def printPostOrder(tree):
 afdd = AFD('(a|b)+abc?')
 st = afdd.syntaxTree()
 anulable = afdd.anulable(st[0])
-fP = afdd.lastPosMethod(anulable)
-# afdd.firstpos(aa[0])
-# print('PostOrder')
-printVisualTree(fP)
+fP = afdd.firstPosMethod(anulable)
+lP = afdd.lastPosMethod(fP)
+
+afdd.tree = fP
+treeVar = afdd.tree
+afdd.genNextPosDict(treeVar)
+afdd.genNextPos(treeVar)
+varT = afdd.table
+varT
+
+
+# printVisualTree(fP)
