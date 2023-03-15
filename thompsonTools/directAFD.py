@@ -113,7 +113,10 @@ class AFD:
 def printVisualTree(tree, level=0):
     if tree:
         printVisualTree(tree.right, level+1)
-        print('  '*(level*3) + str(tree.symbol))
+        if tree.no or tree.no == 0:
+            print('  '*(level*3) + str(tree.symbol) + str(tree.no))
+        else:
+            print('  '*(level*3) + str(tree.symbol))
         printVisualTree(tree.left, level+1)
 
 
@@ -123,7 +126,7 @@ def printPostOrder(tree):
         printPostOrder(tree.right)
         print(tree.symbol)
 
-afdd = AFD('(a*|b*)c')
+afdd = AFD('(a|b)*a(a|b)(a|b)')
 aa = afdd.syntaxTree()
 printVisualTree(aa[0])
 # print(aa)
