@@ -51,8 +51,26 @@ class AFD:
                         r.parent = newSymC
                         tree.append(newSymC)
             if regex[i].isalnum() or regex[i] == '#':
-                tree.append(Node(regex[i], no=enum))
-                enum += 1
+                if i+1 < len(regex) and regex[i+1] == '*':
+                    if regex[i] != 'ε':
+                        alnumNode = Node(regex[i], no=enum)
+                        kleeneNode = Node(regex[i+1], left=alnumNode)
+                        alnumNode.parent = kleeneNode
+                        tree.append(kleeneNode)
+                        enum += 1
+                    else:
+                        alnumNode = Node(regex[i])
+                        kleeneNode = Node(regex[i+1], left=alnumNode)
+                        alnumNode.parent = kleeneNode
+                        tree.append(kleeneNode)
+                else:
+                    if regex[i] != 'ε':
+                        alnumNode = Node(regex[i], no=enum)
+                        tree.append(alnumNode)
+                        enum += 1
+                    else:
+                        alnumNode = Node(regex[i])
+                        tree.append(alnumNode)
             elif regex[i] == '(':
                 subexpr_stack.append(tree)  
                 tree = []  
@@ -69,6 +87,15 @@ class AFD:
             elif regex[i] == '|' or regex[i] == '.':
                 if len(tree) < 2:
                     toDo.append(regex[i])
+            # elif regex[i] == '*' and regex[i-1] != ')':
+            #     if len(tree) > 0:
+            #         child = tree.pop(0)
+            #         kleene = Node(regex[i], left=child)
+            #         child.parent = kleene
+            #         tree.append(kleene)
+                    # tree.append(Node(regex[i], left=tree[0]))
+
+
 
         while toDo and tree:
             if toDo[-1] == '|':
@@ -91,9 +118,20 @@ class AFD:
     
 
 
+def printVisualTree(tree, level=0):
+    if tree:
+        printVisualTree(tree.right, level+1)
+        print('  '*(level*3) + str(tree.symbol))
+        printVisualTree(tree.left, level+1)
 
 
+def printPostOrder(tree):
+    if tree:
+        printPostOrder(tree.left)
+        printPostOrder(tree.right)
+        print(tree.symbol)
 
-afdd = AFD('(a|b)+abc?')
+afdd = AFD('(a*|b*)c')
 aa = afdd.syntaxTree()
-print(aa)
+printVisualTree(aa[0])
+# print(aa)
