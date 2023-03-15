@@ -108,14 +108,31 @@ class AFD:
         return tree
     
 
+    def anulable(self, tree, level=0):
+        if tree:
+            self.anulable(tree.left, level+1)
+            self.anulable(tree.right, level+1)
+            if tree.symbol == 'ε':
+                tree.anulable = True
+            elif tree.symbol.isalnum():
+                tree.anulable = False
+            elif tree.symbol == '|':
+                    tree.anulable = tree.left.anulable or tree.right.anulable
+            elif tree.symbol == '.':
+                    tree.anulable = tree.left.anulable and tree.right.anulable
+            elif tree.symbol == '*':
+                tree.anulable = True
+
 
 def printVisualTree(tree, level=0):
     if tree:
         printVisualTree(tree.right, level+1)
         if tree.no or tree.no == 0:
-            print('  '*(level*3) + str(tree.symbol) + str(tree.no))
+            anulable = 'v' if tree.anulable else 'f'
+            print('  '*(level*3) + str(tree.symbol) + str(tree.no) + ' ' + str(anulable))
         else:
-            print('  '*(level*3) + str(tree.symbol))
+            anulable = 'v' if tree.anulable else 'f'
+            print('  '*(level*3) + str(tree.symbol) +  ' ' + str(anulable))
         printVisualTree(tree.left, level+1)
 
 
@@ -126,6 +143,7 @@ def printPostOrder(tree):
         print(tree.symbol)
 
 
-afdd = AFD('(a|ε)b(a+)c?')
+afdd = AFD('(a|b)+abc?')
 aa = afdd.syntaxTree()
+afdd.anulable(aa[0])
 printVisualTree(aa[0])
