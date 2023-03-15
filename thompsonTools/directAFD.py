@@ -2,7 +2,7 @@
 from Format import Format
 
 class Node:
-    def __init__(self, symbol, parent = None, left = None, right = None, no = None, anulable = False, firstpos = None, lastpos = None):
+    def __init__(self, symbol, parent = None, left = None, right = None, no = None, anulable = False, firstpos = [], lastpos = None):
         self.symbol = symbol
         self.parent = parent
         self.left = left
@@ -87,7 +87,6 @@ class AFD:
             elif regex[i] == '|' or regex[i] == '.':
                 if len(tree) < 2:
                     toDo.append(regex[i])
-
         while toDo and tree:
             if toDo[-1] == '|':
                 if len(tree) > 1:
@@ -124,15 +123,31 @@ class AFD:
                 tree.anulable = True
 
 
+    def firstpos(self, tree):
+        if tree:
+            self.firstpos(tree.left)
+            self.firstpos(tree.right)
+            if tree.symbol.isalnum():
+                tree.firstpos.append(tree.no)
+            elif tree.symbol == '|':
+                tree.firstpos = tree.left.firstpos + tree.right.firstpos
+            elif tree.symbol == '.':
+                if tree.left.anulable:
+                    tree.firstpos = tree.left.firstpos + tree.right.firstpos
+                else:
+                    tree.firstpos = tree.left.firstpos
+            elif tree.symbol == '*':
+                tree.firstpos = tree.left.firstpos                             
+
+
 def printVisualTree(tree, level=0):
     if tree:
         printVisualTree(tree.right, level+1)
         if tree.no or tree.no == 0:
-            anulable = 'v' if tree.anulable else 'f'
-            print('  '*(level*3) + str(tree.symbol) + str(tree.no) + ' ' + str(anulable))
+            print('  '*(level*3) + str(tree.symbol) + str(tree.no) + ' ' + str(tree.firstpos))
         else:
             anulable = 'v' if tree.anulable else 'f'
-            print('  '*(level*3) + str(tree.symbol) +  ' ' + str(anulable))
+            print('  '*(level*3) + str(tree.symbol) +  ' ' + str(tree.firstpos))
         printVisualTree(tree.left, level+1)
 
 
@@ -142,8 +157,35 @@ def printPostOrder(tree):
         printPostOrder(tree.right)
         print(tree.symbol)
 
+def printFirstPos(tree):
+    if tree:
+        printFirstPos(tree.left)
+        printFirstPos(tree.right)
+        if tree.symbol.isalnum() and tree.no or tree.no == 0 or tree.symbol == '#':
+            # print(tree.symbol, [tree.no])
+            tree.firstpos = [tree.no]
+        if tree.symbol == '|':
+            # print(tree.symbol, tree.left.firstpos + tree.right.firstpos)
+            tree.firstpos = tree.left.firstpos + tree.right.firstpos
+        if tree.symbol == '.':
+            if tree.left.anulable:
+                # print(tree.symbol, tree.left.firstpos + tree.right.firstpos)
+                tree.firstpos = tree.left.firstpos + tree.right.firstpos
+            else:
+                # print(tree.symbol, tree.left.firstpos)
+                tree.firstpos = tree.left.firstpos
+        if tree.symbol == '*':
+            # print(tree.symbol, tree.left.firstpos)
+            tree.firstpos = tree.left.firstpos
+    return tree
+
+            
+
 
 afdd = AFD('(a|b)+abc?')
 aa = afdd.syntaxTree()
-afdd.anulable(aa[0])
-printVisualTree(aa[0])
+# afdd.anulable(aa[0])
+mm = printFirstPos(aa[0])
+# afdd.firstpos(aa[0])
+# print('PostOrder')
+printVisualTree(mm)
