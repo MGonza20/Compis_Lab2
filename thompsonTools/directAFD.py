@@ -107,10 +107,10 @@ class AFD:
         return tree
     
 
-    def anulable(self, tree, level=0):
+    def anulable(self, tree):
         if tree:
-            self.anulable(tree.left, level+1)
-            self.anulable(tree.right, level+1)
+            self.anulable(tree.left)
+            self.anulable(tree.right)
             if tree.symbol == 'ε':
                 tree.anulable = True
             elif tree.symbol.isalnum():
@@ -121,6 +121,7 @@ class AFD:
                     tree.anulable = tree.left.anulable and tree.right.anulable
             elif tree.symbol == '*':
                 tree.anulable = True
+        return tree
 
 
     def firstpos(self, tree):
@@ -137,7 +138,8 @@ class AFD:
                 else:
                     tree.firstpos = tree.left.firstpos
             elif tree.symbol == '*':
-                tree.firstpos = tree.left.firstpos                             
+                tree.firstpos = tree.left.firstpos 
+        return tree                            
 
 
 def printVisualTree(tree, level=0):
@@ -146,7 +148,6 @@ def printVisualTree(tree, level=0):
         if tree.no or tree.no == 0:
             print('  '*(level*3) + str(tree.symbol) + str(tree.no) + ' ' + str(tree.firstpos))
         else:
-            anulable = 'v' if tree.anulable else 'f'
             print('  '*(level*3) + str(tree.symbol) +  ' ' + str(tree.firstpos))
         printVisualTree(tree.left, level+1)
 
@@ -183,9 +184,9 @@ def printFirstPos(tree):
 
 
 afdd = AFD('(a|b)+abc?')
-aa = afdd.syntaxTree()
-# afdd.anulable(aa[0])
-mm = printFirstPos(aa[0])
+st = afdd.syntaxTree()
+anulable = afdd.anulable(st[0])
+fP = printFirstPos(anulable)
 # afdd.firstpos(aa[0])
 # print('PostOrder')
-printVisualTree(mm)
+printVisualTree(fP)
