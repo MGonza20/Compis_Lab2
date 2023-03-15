@@ -2,7 +2,7 @@
 from Format import Format
 
 class Node:
-    def __init__(self, symbol, parent = None, left = None, right = None, no = None, anulable = False, firstpos = [], lastpos = None):
+    def __init__(self, symbol, parent = None, left = None, right = None, no = None, anulable = False, firstpos = [], lastpos = []):
         self.symbol = symbol
         self.parent = parent
         self.left = left
@@ -27,7 +27,7 @@ class AFD:
     def syntaxTree(self):
         tree = []
         toDo = []
-        enum = 0
+        enum = 1
         regex = self.augmentRegex()
         subexpr_stack = [] 
 
@@ -142,27 +142,10 @@ class AFD:
         return tree                            
 
 
-def printVisualTree(tree, level=0):
-    if tree:
-        printVisualTree(tree.right, level+1)
-        if tree.no or tree.no == 0:
-            print('  '*(level*3) + str(tree.symbol) + str(tree.no) + ' ' + str(tree.firstpos))
-        else:
-            print('  '*(level*3) + str(tree.symbol) +  ' ' + str(tree.firstpos))
-        printVisualTree(tree.left, level+1)
-
-
-def printPostOrder(tree):
-    if tree:
-        printPostOrder(tree.left)
-        printPostOrder(tree.right)
-        print(tree.symbol)
-
-
-    def printFirstPos(self, tree):
+    def firstPosMethod(self, tree):
         if tree:
-            printFirstPos(tree.left)
-            printFirstPos(tree.right)
+            self.firstPosMethod(tree.left)
+            self.firstPosMethod(tree.right)
             if tree.symbol.isalnum() and tree.no or tree.no == 0 or tree.symbol == '#':
                 tree.firstpos = [tree.no]
             if tree.symbol == '|':
@@ -176,13 +159,48 @@ def printPostOrder(tree):
                 tree.firstpos = tree.left.firstpos
         return tree
 
+
+    def lastPosMethod(self, tree):
+        if tree:
+            self.lastPosMethod(tree.left)
+            self.lastPosMethod(tree.right)
+            if tree.symbol.isalnum() and tree.no or tree.no == 0 or tree.symbol == '#':
+                tree.lastpos = [tree.no]
+            if tree.symbol == '|':
+                tree.lastpos = tree.left.lastpos + tree.right.lastpos
+            if tree.symbol == '.':
+                if tree.right.anulable:
+                    tree.lastpos = tree.left.lastpos + tree.right.lastpos
+                else:
+                    tree.lastpos = tree.right.lastpos
+            if tree.symbol == '*':
+                tree.lastpos = tree.left.lastpos
+        return tree
+    
+
+def printVisualTree(tree, level=0):
+    if tree:
+        printVisualTree(tree.right, level+1)
+        if tree.no or tree.no == 0:
+            print('  '*(level*3) + str(tree.symbol) + str(tree.no) + ' ' + str(tree.lastpos))
+        else:
+            print('  '*(level*3) + str(tree.symbol) + ' ' + str(tree.lastpos))
+        printVisualTree(tree.left, level+1)
+
+
+def printPostOrder(tree):
+    if tree:
+        printPostOrder(tree.left)
+        printPostOrder(tree.right)
+        print(tree.symbol)
+
             
 
 
 afdd = AFD('(a|b)+abc?')
 st = afdd.syntaxTree()
 anulable = afdd.anulable(st[0])
-fP = afdd.printFirstPos(anulable)
+fP = afdd.lastPosMethod(anulable)
 # afdd.firstpos(aa[0])
 # print('PostOrder')
 printVisualTree(fP)
