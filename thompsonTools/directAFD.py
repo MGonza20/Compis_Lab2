@@ -87,14 +87,6 @@ class AFD:
             elif regex[i] == '|' or regex[i] == '.':
                 if len(tree) < 2:
                     toDo.append(regex[i])
-            # elif regex[i] == '*' and regex[i-1] != ')':
-            #     if len(tree) > 0:
-            #         child = tree.pop(0)
-            #         kleene = Node(regex[i], left=child)
-            #         child.parent = kleene
-            #         tree.append(kleene)
-                    # tree.append(Node(regex[i], left=tree[0]))
-
 
 
         while toDo and tree:
