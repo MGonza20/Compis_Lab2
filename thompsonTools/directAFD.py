@@ -158,25 +158,21 @@ def printPostOrder(tree):
         printPostOrder(tree.right)
         print(tree.symbol)
 
+
 def printFirstPos(tree):
     if tree:
         printFirstPos(tree.left)
         printFirstPos(tree.right)
         if tree.symbol.isalnum() and tree.no or tree.no == 0 or tree.symbol == '#':
-            # print(tree.symbol, [tree.no])
             tree.firstpos = [tree.no]
         if tree.symbol == '|':
-            # print(tree.symbol, tree.left.firstpos + tree.right.firstpos)
             tree.firstpos = tree.left.firstpos + tree.right.firstpos
         if tree.symbol == '.':
             if tree.left.anulable:
-                # print(tree.symbol, tree.left.firstpos + tree.right.firstpos)
                 tree.firstpos = tree.left.firstpos + tree.right.firstpos
             else:
-                # print(tree.symbol, tree.left.firstpos)
                 tree.firstpos = tree.left.firstpos
         if tree.symbol == '*':
-            # print(tree.symbol, tree.left.firstpos)
             tree.firstpos = tree.left.firstpos
     return tree
 
