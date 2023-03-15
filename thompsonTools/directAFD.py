@@ -159,22 +159,22 @@ def printPostOrder(tree):
         print(tree.symbol)
 
 
-def printFirstPos(tree):
-    if tree:
-        printFirstPos(tree.left)
-        printFirstPos(tree.right)
-        if tree.symbol.isalnum() and tree.no or tree.no == 0 or tree.symbol == '#':
-            tree.firstpos = [tree.no]
-        if tree.symbol == '|':
-            tree.firstpos = tree.left.firstpos + tree.right.firstpos
-        if tree.symbol == '.':
-            if tree.left.anulable:
+    def printFirstPos(self, tree):
+        if tree:
+            printFirstPos(tree.left)
+            printFirstPos(tree.right)
+            if tree.symbol.isalnum() and tree.no or tree.no == 0 or tree.symbol == '#':
+                tree.firstpos = [tree.no]
+            if tree.symbol == '|':
                 tree.firstpos = tree.left.firstpos + tree.right.firstpos
-            else:
+            if tree.symbol == '.':
+                if tree.left.anulable:
+                    tree.firstpos = tree.left.firstpos + tree.right.firstpos
+                else:
+                    tree.firstpos = tree.left.firstpos
+            if tree.symbol == '*':
                 tree.firstpos = tree.left.firstpos
-        if tree.symbol == '*':
-            tree.firstpos = tree.left.firstpos
-    return tree
+        return tree
 
             
 
@@ -182,7 +182,7 @@ def printFirstPos(tree):
 afdd = AFD('(a|b)+abc?')
 st = afdd.syntaxTree()
 anulable = afdd.anulable(st[0])
-fP = printFirstPos(anulable)
+fP = afdd.printFirstPos(anulable)
 # afdd.firstpos(aa[0])
 # print('PostOrder')
 printVisualTree(fP)
