@@ -2,15 +2,15 @@
 from Format import Format
 
 class Node:
-    def __init__(self, symbol, parent = None, left = None, right = None, no = None): #, anulable = False, firstpos = None, lastpos = None):
+    def __init__(self, symbol, parent = None, left = None, right = None, no = None, anulable = False, firstpos = None, lastpos = None):
         self.symbol = symbol
         self.parent = parent
         self.left = left
         self.right = right
         self.no = no  
-        # self.anulable = anulable
-        # self.firstpos = firstpos
-        # self.lastpos = lastpos
+        self.anulable = anulable
+        self.firstpos = firstpos
+        self.lastpos = lastpos
         
 
 class AFD:
@@ -88,7 +88,6 @@ class AFD:
                 if len(tree) < 2:
                     toDo.append(regex[i])
 
-
         while toDo and tree:
             if toDo[-1] == '|':
                 if len(tree) > 1:
@@ -126,7 +125,7 @@ def printPostOrder(tree):
         printPostOrder(tree.right)
         print(tree.symbol)
 
-afdd = AFD('(a|b)*a(a|b)(a|b)')
+
+afdd = AFD('(a|ε)b(a+)c?')
 aa = afdd.syntaxTree()
 printVisualTree(aa[0])
-# print(aa)
