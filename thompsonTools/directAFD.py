@@ -17,11 +17,18 @@ class nextPos:
         self.symbol = symbol
         self.nextpos = nextpos        
 
+class state:
+    def __init__(self, positions, transitions):
+        self.positions = positions
+        self.transitions = transitions
+
+
 class AFD:
     def __init__(self, regex):
         self.regex = regex
         self.tree = None
         self.table = {}
+        self.transitions = {}
 
     def augmentRegex(self):
         hashRegex = Format(self.regex + '#')
@@ -196,6 +203,41 @@ class AFD:
         return self.table
         
 
+    def symbolsDict(self):
+        symbols = set()
+        for i in range(len(self.table)):
+            sym = self.table[i+1].symbol
+            symbols.add(sym)
+        symbols.remove('#')
+
+        symbols = sorted(list(symbols))
+        ts = {symbol: set() for symbol in symbols}
+        # firstValue = self.table[1].nextpos
+        return ts
+    
+    def genAFD(self, state=None):
+        table = self.tableToObj()
+        
+        transitionTable = {}
+    
+        if not state:
+            firstValue = self.table[1].nextpos
+            symbols = self.symbolsDict()
+            for num in firstValue:
+                for key in symbols:
+                    if table[num].symbol == key:
+                        for el in table[num].nextpos:
+                            symbols[key].add(el)
+            state = symbols
+        else:
+            symbols = self.symbolsDict()
+            for key in symbols:
+                for num in state[key]:
+                    if table[num].symbol == key:
+                        symbols[key].append(num)
+            state = symbols
+                    
+
 
 
 def printVisualTree(tree, level=0):
@@ -227,9 +269,9 @@ afdd.tree = fP
 treeVar = afdd.tree
 afdd.genNextPosDict(treeVar)
 afdd.genNextPos(treeVar)
-afdd.tableToObj()
-varT = afdd.table
-varT
+afdd.genAFD()
+# afdd.tableToObj()
+# afdd.transitionss()
 
 
 # printVisualTree(fP)
