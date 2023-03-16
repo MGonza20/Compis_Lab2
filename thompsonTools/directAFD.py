@@ -172,6 +172,7 @@ class AFD:
                 tree.lastpos = tree.left.lastpos
         return tree
     
+
     def genNextPosDict(self, tree):
         if tree:
             self.genNextPosDict(tree.left)
@@ -218,10 +219,11 @@ class AFD:
     def genAFD(self, state=None):
         table = self.tableToObj()
         
-        transitionTable = []
+        transitionTable = {}
         states = []
         done = []
-    
+
+        count = 1
         if not state:
             firstValue = set(self.table[1].nextpos)
             symbols = self.symbolsDict()
@@ -231,8 +233,9 @@ class AFD:
                         for el in table[num].nextpos:
                             symbols[key].add(el)
             stat = stateObj(firstValue, symbols)
-            transitionTable.append(stat)
+            transitionTable[count] = stat
             done.append(firstValue)
+            count += 1
             for k, v in symbols.items():
                 if v != firstValue and v:
                     states.append(v)
@@ -246,12 +249,23 @@ class AFD:
                         for el in table[num].nextpos:
                             symbols[key].add(el)
             stat = stateObj(state, symbols)
-            transitionTable.append(stat)
+            transitionTable[count] = stat
             done.append(state)
+            count += 1
             for k, v in symbols.items():
                 if v not in done and v:
                     states.append(v)
         return transitionTable
+    
+    
+    # def createNewStates(self, table):
+    #     for i in range(len(table)):
+            # for k, v in table.items():
+            #     for k2, v2 in v.transitions.items():
+            #         if v.positions == v2:
+            #             v.transitions[k2] = k
+        # return table
+
 
 
 def printVisualTree(tree, level=0):
@@ -279,11 +293,16 @@ anulable = afdd.anulable(st[0])
 fP = afdd.firstPosMethod(anulable)
 lP = afdd.lastPosMethod(fP)
 
-afdd.tree = fP
+afdd.tree = lP
 treeVar = afdd.tree
 afdd.genNextPosDict(treeVar)
 afdd.genNextPos(treeVar)
-mmmmmm =afdd.genAFD()
+afdFromR = afdd.genAFD()
+# newValues = afdd.createNewStates(afdFromR)
+
+# letters = afdd.createNewStates(transitionTable)
+# newStates = afdd.assignNewStates(transitionTable, letters)
+
 aa = 12
 # afdd.tableToObj()
 # afdd.transitionss()
