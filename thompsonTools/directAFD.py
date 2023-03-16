@@ -258,13 +258,17 @@ class AFD:
         return transitionTable
     
     
-    # def createNewStates(self, table):
-    #     for i in range(len(table)):
-            # for k, v in table.items():
-            #     for k2, v2 in v.transitions.items():
-            #         if v.positions == v2:
-            #             v.transitions[k2] = k
-        # return table
+    def createNewStates(self, table):
+        for k, v in table.items():
+            for k2, v2 in v.transitions.items():
+                for k3, v3 in table.items():
+                    if v2 == v3.positions:
+                        v.transitions[k2] = k3
+                # if v.positions == v2:
+                #     v.transitions[k2] = k
+        for k, v in table.items():
+            v.positions = k
+        return table
 
 
 
@@ -298,7 +302,7 @@ treeVar = afdd.tree
 afdd.genNextPosDict(treeVar)
 afdd.genNextPos(treeVar)
 afdFromR = afdd.genAFD()
-# newValues = afdd.createNewStates(afdFromR)
+newValues = afdd.createNewStates(afdFromR)
 
 # letters = afdd.createNewStates(transitionTable)
 # newStates = afdd.assignNewStates(transitionTable, letters)
