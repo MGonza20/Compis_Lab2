@@ -318,7 +318,20 @@ class AFD:
                 if v2 or v2 == 0:
                     graph.add_edge(pydot.Edge(v.positions, v2, label=k2))
         graph.write_png('afdDir.png')
-
+    
+    
+    def generateAFD(self):
+        st = self.syntaxTree()
+        anulable = self.anulable(st[0])
+        fP = self.firstPosMethod(anulable)
+        lP = self.lastPosMethod(fP)
+        self.tree = lP
+        treeVar = self.tree
+        self.genNextPosDict(treeVar)
+        self.genNextPos(treeVar)
+        table, last = self.genAFD()
+        newValues = self.createNewStates(table, last)
+        self.drawAFD(*newValues)
 
 
 def printVisualTree(tree, level=0):
@@ -340,18 +353,6 @@ def printPostOrder(tree):
             
 
 
-afdd = AFD('(a|b)+abc?')
-st = afdd.syntaxTree()
-anulable = afdd.anulable(st[0])
-fP = afdd.firstPosMethod(anulable)
-lP = afdd.lastPosMethod(fP)
-
-afdd.tree = lP
-treeVar = afdd.tree
-afdd.genNextPosDict(treeVar)
-afdd.genNextPos(treeVar)
-afdFromR, last = afdd.genAFD()
-newValues = afdd.createNewStates(afdFromR, last)
-afdd.drawAFD(*newValues)
-
+afdd = AFD('ab*ab*')
+afdd.generateAFD()
 
