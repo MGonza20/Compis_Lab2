@@ -220,6 +220,7 @@ class AFD:
         
         transitionTable = []
         states = []
+        done = []
     
         if not state:
             firstValue = set(self.table[1].nextpos)
@@ -245,8 +246,9 @@ class AFD:
                             symbols[key].add(el)
             stat = stateObj(state, symbols)
             transitionTable.append(stat)
+            done.append(state)
             for k, v in symbols.items():
-                if v not in states and v not in [i.state for i in transitionTable]:
+                if v not in done and v:
                     states.append(v)
         return transitionTable
 
