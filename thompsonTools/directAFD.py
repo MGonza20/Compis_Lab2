@@ -326,17 +326,17 @@ st = afdd.syntaxTree()
 anulable = afdd.anulable(st[0])
 fP = afdd.firstPosMethod(anulable)
 lP = afdd.lastPosMethod(fP)
-printVisualTree(lP)
+# printVisualTree(lP)
 # fP = afdd.firstPosMethod(anulable)
 # lP = afdd.lastPosMethod(fP)
 
-# afdd.tree = lP
-# treeVar = afdd.tree
-# afdd.genNextPosDict(treeVar)
-# afdd.genNextPos(treeVar)
-# afdFromR = afdd.genAFD()
-# newValues = afdd.createNewStates(afdFromR)
-# afdd.drawAFD(*newValues)
+afdd.tree = lP
+treeVar = afdd.tree
+afdd.genNextPosDict(treeVar)
+afdd.genNextPos(treeVar)
+afdFromR = afdd.genAFD()
+newValues = afdd.createNewStates(afdFromR)
+afdd.drawAFD(*newValues)
 
 # letters = afdd.createNewStates(transitionTable)
 # newStates = afdd.assignNewStates(transitionTable, letters)
