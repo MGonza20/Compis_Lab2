@@ -11,7 +11,11 @@ class Node:
         self.anulable = anulable
         self.firstpos = firstpos
         self.lastpos = lastpos
-        
+
+class nextPos:
+    def __init__(self, symbol, nextpos = []):
+        self.symbol = symbol
+        self.nextpos = nextpos        
 
 class AFD:
     def __init__(self, regex):
@@ -181,7 +185,15 @@ class AFD:
                 for i in tree.lastpos:
                     for key in self.table[i]:
                         self.table[i][key] += tree.firstpos
+        
 
+    def tableToObj(self):
+        for key in self.table:
+            for key2 in self.table[key]:
+                s = key2
+                nP = self.table[key][key2]
+                self.table[key] = nextPos(symbol=s, nextpos=nP)
+        return self.table
         
 
 
@@ -215,6 +227,7 @@ afdd.tree = fP
 treeVar = afdd.tree
 afdd.genNextPosDict(treeVar)
 afdd.genNextPos(treeVar)
+afdd.tableToObj()
 varT = afdd.table
 varT
 
