@@ -191,11 +191,13 @@ class AFD:
             if tree.symbol == '.':
                 for i in tree.left.lastpos:
                     for key in self.table[i]:
-                        self.table[i][key] += tree.right.firstpos
+                        if tree.right.firstpos not in self.table[i][key]:
+                            self.table[i][key] += tree.right.firstpos
             if tree.symbol == '*':
                 for i in tree.lastpos:
                     for key in self.table[i]:
-                        self.table[i][key] += tree.firstpos
+                        if tree.firstpos not in self.table[i][key]:
+                            self.table[i][key] += tree.firstpos
         
 
     def tableToObj(self):
@@ -315,7 +317,7 @@ class AFD:
                     graph.add_node(pydot.Node(str(v.positions)))
                 if v2 or v2 == 0:
                     graph.add_edge(pydot.Edge(v.positions, v2, label=k2))
-        graph.write_png('afdDirTry.png')
+        graph.write_png('afdDir.png')
 
 
 
@@ -336,16 +338,13 @@ def printPostOrder(tree):
         print(tree.symbol)
 
             
-##AAAAAAAAA
 
-afdd = AFD('ab*ab*')
+
+afdd = AFD('(a|b)+abc?')
 st = afdd.syntaxTree()
 anulable = afdd.anulable(st[0])
 fP = afdd.firstPosMethod(anulable)
 lP = afdd.lastPosMethod(fP)
-# printVisualTree(lP)
-# fP = afdd.firstPosMethod(anulable)
-# lP = afdd.lastPosMethod(fP)
 
 afdd.tree = lP
 treeVar = afdd.tree
@@ -355,12 +354,4 @@ afdFromR, last = afdd.genAFD()
 newValues = afdd.createNewStates(afdFromR, last)
 afdd.drawAFD(*newValues)
 
-# letters = afdd.createNewStates(transitionTable)
-# newStates = afdd.assignNewStates(transitionTable, letters)
 
-aa = 12
-# afdd.tableToObj()
-# afdd.transitionss()
-
-
-# printVisualTree(fP)
