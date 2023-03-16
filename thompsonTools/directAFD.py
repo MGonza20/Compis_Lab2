@@ -24,6 +24,8 @@ class stateObj:
     def __init__(self, positions, transitions):
         self.positions = positions
         self.transitions = transitions
+        self.aceptting = False
+        self.initial = False
 
 
 class AFD:
@@ -295,7 +297,6 @@ class AFD:
             for k2, v2 in v.transitions.items():
                 if v2 == last:
                     aceptting.append(k)
-        
         return table, initial, aceptting
     
 
@@ -330,6 +331,30 @@ class AFD:
         self.genNextPos(treeVar)
         table, last = self.genAFD()
         return self.createNewStates(table, last)
+    
+
+    def defineInitialAndAceptting(self, table, initial, aceptting):
+        for k, v in table.items():
+            if v.positions == initial:
+                v.initial = True
+            if v.positions in aceptting:
+                v.aceptting = True
+        return table
+
+
+    def minimizeAFD(self, table, groups=None):
+        t = table
+        if not groups:
+            groups = [set(), set()]
+            for k, v in t.items():
+                if v.aceptting:
+                    groups[0].add(v)
+                else:
+                    groups[1].add(v)
+        return groups
+        
+
+
 
 
 def printVisualTree(tree, level=0):
@@ -351,7 +376,10 @@ def printPostOrder(tree):
             
 
 
-afdd = AFD('(a|b)+abc?')
+afdd = AFD('(a|b)*abb')
 data = afdd.generateAFD()
+table = afdd.defineInitialAndAceptting(*data)
+mini = afdd.minimizeAFD(table)
+aa = 12
 afdd.drawAFD(*data)
 
