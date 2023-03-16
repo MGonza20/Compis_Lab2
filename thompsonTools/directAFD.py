@@ -295,7 +295,6 @@ class AFD:
             for k2, v2 in v.transitions.items():
                 if v2 == last:
                     aceptting.append(k)
-        mm = aceptting
         
         return table, initial, aceptting
     
@@ -330,8 +329,7 @@ class AFD:
         self.genNextPosDict(treeVar)
         self.genNextPos(treeVar)
         table, last = self.genAFD()
-        newValues = self.createNewStates(table, last)
-        self.drawAFD(*newValues)
+        return self.createNewStates(table, last)
 
 
 def printVisualTree(tree, level=0):
@@ -353,6 +351,7 @@ def printPostOrder(tree):
             
 
 
-afdd = AFD('ab*ab*')
-afdd.generateAFD()
+afdd = AFD('(a|b)+abc?')
+data = afdd.generateAFD()
+afdd.drawAFD(*data)
 
