@@ -17,7 +17,7 @@ class nextPos:
         self.symbol = symbol
         self.nextpos = nextpos        
 
-class state:
+class stateObj:
     def __init__(self, positions, transitions):
         self.positions = positions
         self.transitions = transitions
@@ -218,26 +218,37 @@ class AFD:
     def genAFD(self, state=None):
         table = self.tableToObj()
         
-        transitionTable = {}
+        transitionTable = []
+        states = []
     
         if not state:
-            firstValue = self.table[1].nextpos
+            firstValue = set(self.table[1].nextpos)
             symbols = self.symbolsDict()
             for num in firstValue:
                 for key in symbols:
                     if table[num].symbol == key:
                         for el in table[num].nextpos:
                             symbols[key].add(el)
-            state = symbols
-        else:
-            symbols = self.symbolsDict()
-            for key in symbols:
-                for num in state[key]:
-                    if table[num].symbol == key:
-                        symbols[key].append(num)
-            state = symbols
-                    
+            stat = stateObj(firstValue, symbols)
+            transitionTable.append(stat)
+            for k, v in symbols.items():
+                if v != firstValue and v:
+                    states.append(v)
 
+        while states:
+            state = states.pop(0)
+            symbols = self.symbolsDict()
+            for num in state:
+                for key in symbols:
+                    if table[num].symbol == key:
+                        for el in table[num].nextpos:
+                            symbols[key].add(el)
+            stat = stateObj(state, symbols)
+            transitionTable.append(stat)
+            for k, v in symbols.items():
+                if v not in states and v not in [i.state for i in transitionTable]:
+                    states.append(v)
+        return transitionTable
 
 
 def printVisualTree(tree, level=0):
