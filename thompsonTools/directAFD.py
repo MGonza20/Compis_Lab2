@@ -1,5 +1,8 @@
 
 from Format import Format
+import os
+os.environ["PATH"] += os.pathsep + 'C:/Program Files (x86)/Graphviz/bin'    
+import pydot
 
 class Node:
     def __init__(self, symbol, parent = None, left = None, right = None, no = None, anulable = False, firstpos = [], lastpos = []):
@@ -278,6 +281,24 @@ class AFD:
         return table, initial, aceptting
     
 
+    def drawAFD(self, table, initial, aceptting):
+        graph = pydot.Dot(graph_type='digraph', strict=True)
+        graph.set_rankdir('LR')
+    
+        for i in aceptting:
+            graph.add_node(pydot.Node(i))
+        graph.set_node_defaults(shape='circle')
+        for k, v in table.items():
+            for k2, v2 in v.transitions.items():
+                if v.positions in aceptting:
+                    graph.add_node(pydot.Node(str(v.positions), shape='doublecircle'))
+                if v.positions == initial:
+                    graph.add_node(pydot.Node(str(v.positions), color='green', style='filled', shape='circle'))
+                else:
+                    graph.add_node(pydot.Node(str(v.positions)))
+                if v2 or v2 == 0:
+                    graph.add_edge(pydot.Edge(v.positions, v2, label=k2))
+        graph.write_png('afdDir.png')
 
 
 
@@ -285,9 +306,9 @@ def printVisualTree(tree, level=0):
     if tree:
         printVisualTree(tree.right, level+1)
         if tree.no or tree.no == 0:
-            print('  '*(level*3) + str(tree.symbol) + str(tree.no) + ' ' + str(tree.firstpos))
+            print('  '*(level*3) + str(tree.symbol) + str(tree.no) + ' ' + str(tree.lastpos))
         else:
-            print('  '*(level*3) + str(tree.symbol) + ' ' + str(tree.firstpos))
+            print('  '*(level*3) + str(tree.symbol) + ' ' + str(tree.lastpos))
         printVisualTree(tree.left, level+1)
 
 
@@ -300,18 +321,22 @@ def printPostOrder(tree):
             
 
 
-afdd = AFD('(a|b)+abc?')
+afdd = AFD('ab*ab*')
 st = afdd.syntaxTree()
 anulable = afdd.anulable(st[0])
 fP = afdd.firstPosMethod(anulable)
 lP = afdd.lastPosMethod(fP)
+printVisualTree(lP)
+# fP = afdd.firstPosMethod(anulable)
+# lP = afdd.lastPosMethod(fP)
 
-afdd.tree = lP
-treeVar = afdd.tree
-afdd.genNextPosDict(treeVar)
-afdd.genNextPos(treeVar)
-afdFromR = afdd.genAFD()
-newValues = afdd.createNewStates(afdFromR)
+# afdd.tree = lP
+# treeVar = afdd.tree
+# afdd.genNextPosDict(treeVar)
+# afdd.genNextPos(treeVar)
+# afdFromR = afdd.genAFD()
+# newValues = afdd.createNewStates(afdFromR)
+# afdd.drawAFD(*newValues)
 
 # letters = afdd.createNewStates(transitionTable)
 # newStates = afdd.assignNewStates(transitionTable, letters)
