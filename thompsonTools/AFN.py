@@ -285,20 +285,7 @@ class AFN:
             
 
 
-                
-
-
-
-    
-    
-# aff = AFN("a?(b?)?a*")
-# aff.MYT()
-# print(aff.cerraduraKleene(4))
-
-# aff = AFN("ab*ab*")
-# aff.MYT()
-# print(aff.cerraduraKleene(0))
-
+            
 aff = AFN("(a|b)*abb")
 aff.MYT()
 aff.toAFD()

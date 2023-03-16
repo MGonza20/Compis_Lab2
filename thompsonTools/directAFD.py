@@ -376,7 +376,7 @@ def printPostOrder(tree):
             
 
 
-afdd = AFD('(a|b)*abb')
+afdd = AFD('(a|b)+abc?')
 data = afdd.generateAFD()
 table = afdd.defineInitialAndAceptting(*data)
 mini = afdd.minimizeAFD(table)
