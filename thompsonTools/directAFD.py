@@ -216,11 +216,11 @@ class AFD:
 
         symbols = sorted(list(symbols))
         ts = {symbol: set() for symbol in symbols}
-        # firstValue = self.table[1].nextpos
         return ts
     
     def genAFD(self, state=None):
         table = self.tableToObj()
+        last = len(table)
         
         transitionTable = {}
         states = []
@@ -258,10 +258,27 @@ class AFD:
             for k, v in symbols.items():
                 if v not in done and v:
                     states.append(v)
-        return transitionTable
+        return transitionTable, last
     
     
-    def createNewStates(self, table):
+    def createNewStates(self, table, last):
+
+        aceptting  = []
+        count = 0
+        for kk, vv in table.items():
+            for kk2, vv2 in vv.transitions.items():
+                if last in vv2:
+                    count += 1
+        for kkk, vvv in table.items():
+            if last in vvv.positions:
+                count += 1
+        if count:
+            aceptting.append(last)
+        
+        if aceptting[0] in table[len(table)-1].positions:
+            aceptting[0] = len(table)-1
+            last = len(table)-1
+
         for k, v in table.items():
             for k2, v2 in v.transitions.items():
                 for k3, v3 in table.items():
@@ -269,15 +286,15 @@ class AFD:
                         v.transitions[k2] = k3
         for k, v in table.items():
             v.positions = k
-        aceptting  = []
+        
         initial = table[0].positions
-        last = table[len(table)-1].positions
-        aceptting.append(last)
 
         for k, v in table.items():
             for k2, v2 in v.transitions.items():
                 if v2 == last:
                     aceptting.append(k)
+        mm = aceptting
+        
         return table, initial, aceptting
     
 
@@ -298,7 +315,7 @@ class AFD:
                     graph.add_node(pydot.Node(str(v.positions)))
                 if v2 or v2 == 0:
                     graph.add_edge(pydot.Edge(v.positions, v2, label=k2))
-        graph.write_png('afdDir.png')
+        graph.write_png('afdDirTry.png')
 
 
 
@@ -319,7 +336,7 @@ def printPostOrder(tree):
         print(tree.symbol)
 
             
-
+##AAAAAAAAA
 
 afdd = AFD('ab*ab*')
 st = afdd.syntaxTree()
@@ -334,8 +351,8 @@ afdd.tree = lP
 treeVar = afdd.tree
 afdd.genNextPosDict(treeVar)
 afdd.genNextPos(treeVar)
-afdFromR = afdd.genAFD()
-newValues = afdd.createNewStates(afdFromR)
+afdFromR, last = afdd.genAFD()
+newValues = afdd.createNewStates(afdFromR, last)
 afdd.drawAFD(*newValues)
 
 # letters = afdd.createNewStates(transitionTable)
