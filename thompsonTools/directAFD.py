@@ -223,7 +223,7 @@ class AFD:
         states = []
         done = []
 
-        count = 1
+        count = 0
         if not state:
             firstValue = set(self.table[1].nextpos)
             symbols = self.symbolsDict()
@@ -264,11 +264,20 @@ class AFD:
                 for k3, v3 in table.items():
                     if v2 == v3.positions:
                         v.transitions[k2] = k3
-                # if v.positions == v2:
-                #     v.transitions[k2] = k
         for k, v in table.items():
             v.positions = k
-        return table
+        aceptting  = []
+        initial = table[0].positions
+        last = table[len(table)-1].positions
+        aceptting.append(last)
+
+        for k, v in table.items():
+            for k2, v2 in v.transitions.items():
+                if v2 == last:
+                    aceptting.append(k)
+        return table, initial, aceptting
+    
+
 
 
 
