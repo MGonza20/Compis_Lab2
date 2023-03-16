@@ -232,6 +232,7 @@ class AFD:
                             symbols[key].add(el)
             stat = stateObj(firstValue, symbols)
             transitionTable.append(stat)
+            done.append(firstValue)
             for k, v in symbols.items():
                 if v != firstValue and v:
                     states.append(v)
@@ -282,7 +283,8 @@ afdd.tree = fP
 treeVar = afdd.tree
 afdd.genNextPosDict(treeVar)
 afdd.genNextPos(treeVar)
-afdd.genAFD()
+mmmmmm =afdd.genAFD()
+aa = 12
 # afdd.tableToObj()
 # afdd.transitionss()
 
