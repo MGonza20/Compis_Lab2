@@ -315,10 +315,44 @@ class AFN:
                                     value.transitions[k] = name
                         if st.name == value.name:
                             value.name = name
-                            if st.start:
-                                value.start = True
-                            if st.accepting:
-                                value.accepting = True
+        
+        # Haciendo lista de repetidos
+        repeated = []
+        for i in range(len(state_groups)):
+            if len(state_groups[i]) > 1:
+                repeated.append(state_groups[i])
+        
+        unified = []
+        for i in range(len(repeated)):
+            countStart = 0
+            countAccepting = 0
+            startt = False
+            acceptingg = False
+            for j in range(len(repeated[i])):
+                if repeated[i][j].start:
+                    countStart += 1
+                    break
+                if repeated[i][j].accepting:
+                    countAccepting += 1
+                    break
+                if countStart > 0:
+                    startt = True
+                if countAccepting > 0:
+                    acceptingg = True
+                unifiedState = StateAFD(repeated[i][j].name, repeated[i][j].transitions, startt, acceptingg)
+                unified.append(unifiedState)
+            
+        # Eliminando estados repetidos
+        for i in range(len(unified)):
+            count = 0
+            for key, value in afd.items():
+                if count == 0:
+                    if unified[i].name == value.name:
+                        afd[key] = unified[i]
+                        count += 1
+                else:
+                    afd.pop(key)        
+                    
         return afd
     
 
