@@ -263,6 +263,44 @@ class AFN:
                     elif not v:
                         afd[i].transitions[k] = 'estado muerto'
         return afd
+    
+
+    def minimizationAFD(self, afd):
+        afd = self.assignStates().copy()
+
+        accepting_states = set(state for key, state in afd.items() if state.accepting)
+        non_accepting_states = set(state for key, state in afd.items() if not state.accepting)
+        state_groups = [accepting_states, non_accepting_states]
+
+        while True:
+            new_state_groups = []
+            for group in state_groups:
+                
+                transition_groups = {}
+                for state in group:
+                    
+                    transition = tuple(sorted(state.transitions.values()))
+                    if transition not in transition_groups:
+                        transition_groups[transition] = set()
+                    transition_groups[transition].add(state)
+
+                
+                for transition_group in transition_groups.values():
+                    if len(transition_group) > 1:
+                        new_state_groups.append(transition_group)
+                    else:
+                        new_state_groups.append({transition_group.pop()})
+
+            
+            if len(new_state_groups) == len(state_groups):
+                break
+            state_groups = new_state_groups
+
+            return state_groups
+
+        
+    
+
 
 
     def draw_afd(self):
@@ -288,11 +326,14 @@ class AFN:
 
 
             
-aff = AFN("(a|b)+a(a|b)(a|b)")
+aff = AFN("(a|b)*abb")
 aff.MYT()
 # aff.graph_myt()
 aff.toAFD()
-aff.draw_afd()
+newAFD = aff.minimizationAFD(aff.afd)
+lett = 123
+
+# aff.draw_afd()
 
 
         
