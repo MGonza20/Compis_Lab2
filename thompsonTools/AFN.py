@@ -179,7 +179,7 @@ class AFN:
                     else:
                         graph.add_node(pydot.Node(str(v2[i])))
                     graph.add_edge(pydot.Edge(str(k), str(v2[i]), label=k2))
-        graph.write_png('output.png', encoding='utf-8')
+        graph.write_png('output1111.png', encoding='utf-8')
 
 
     def cerraduraKleene(self, state, checked=None):
@@ -278,16 +278,19 @@ class AFN:
                 if state.accepting:
                     graph.add_node(pydot.Node(str(state.name), shape='doublecircle'))
                 else:
-                    graph.add_node(pydot.Node(str(v)))
-                graph.add_edge(pydot.Edge(str(state.name), str(v), label=k))
-        graph.write_png('afnToafd.png', encoding='utf-8')
+                    if v != 'estado muerto':
+                        graph.add_node(pydot.Node(str(v)))
+                if v != 'estado muerto':
+                    graph.add_edge(pydot.Edge(str(state.name), str(v), label=k))
+        graph.write_png('AfnToAfd.png', encoding='utf-8')
 
             
 
 
             
-aff = AFN("(a|b)*abb")
+aff = AFN("(a|b)+a(a|b)(a|b)")
 aff.MYT()
+# aff.graph_myt()
 aff.toAFD()
 aff.draw_afd()
 

@@ -333,6 +333,14 @@ class AFD:
         return self.createNewStates(table, last)
     
 
+    def generatelP(self):
+        st = self.syntaxTree()
+        anulable = self.anulable(st[0])
+        fP = self.firstPosMethod(anulable)
+        lP = self.lastPosMethod(fP)
+        return lP
+    
+
     def defineInitialAndAceptting(self, table, initial, aceptting):
         for k, v in table.items():
             if v.positions == initial:
@@ -382,4 +390,3 @@ table = afdd.defineInitialAndAceptting(*data)
 mini = afdd.minimizeAFD(table)
 aa = 12
 afdd.drawAFD(*data)
-
