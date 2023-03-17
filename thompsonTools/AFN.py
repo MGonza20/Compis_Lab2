@@ -266,39 +266,60 @@ class AFN:
     
 
     def minimizationAFD(self, afd):
+        # Creando copia del AFD
         afd = self.assignStates().copy()
 
+        # Unir estados de aceptacion y que no son de aceptacion
         accepting_states = set(state for key, state in afd.items() if state.accepting)
         non_accepting_states = set(state for key, state in afd.items() if not state.accepting)
         state_groups = [accepting_states, non_accepting_states]
 
+        # Repetir hasta que no se puedan unir mas estados
         while True:
             new_state_groups = []
             for group in state_groups:
-                
+                # Por cada grupo de estados, agrupar por transiciones
                 transition_groups = {}
                 for state in group:
-                    
                     transition = tuple(sorted(state.transitions.values()))
                     if transition not in transition_groups:
                         transition_groups[transition] = set()
                     transition_groups[transition].add(state)
 
-                
+                # Por cada grupo de transiciones, unir estados
                 for transition_group in transition_groups.values():
                     if len(transition_group) > 1:
                         new_state_groups.append(transition_group)
                     else:
                         new_state_groups.append({transition_group.pop()})
 
-            
+            # Si ya no se pueden unir mas estados, terminar
             if len(new_state_groups) == len(state_groups):
                 break
             state_groups = new_state_groups
 
-            return state_groups
+        countStates = 0
+        for i in range(len(state_groups)):
+            countStates += len(state_groups[i])
 
-        
+        # Renombrando estados
+        for group in state_groups:
+            if len(group) > 1:
+                name = chr(65+countStates)
+                countStates += 1
+                for st in group:
+                    for key, value in afd.items():
+                        if st.name in value.transitions.values():
+                            for k, v in value.transitions.items():
+                                if v == st.name:
+                                    value.transitions[k] = name
+                        if st.name == value.name:
+                            value.name = name
+                            if st.start:
+                                value.start = True
+                            if st.accepting:
+                                value.accepting = True
+        return afd
     
 
 
