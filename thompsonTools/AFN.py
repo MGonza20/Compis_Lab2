@@ -328,32 +328,32 @@ class AFN:
             countAccepting = 0
             startt = False
             acceptingg = False
-            for j in range(len(repeated[i])):
-                if repeated[i][j].start:
-                    countStart += 1
-                    break
-                if repeated[i][j].accepting:
-                    countAccepting += 1
-                    break
-                if countStart > 0:
-                    startt = True
-                if countAccepting > 0:
-                    acceptingg = True
-                unifiedState = StateAFD(repeated[i][j].name, repeated[i][j].transitions, startt, acceptingg)
-                unified.append(unifiedState)
             
+            for j in range(len(repeated[i])):
+                if list(repeated[i])[j].start:
+                    countStart += 1
+                if list(repeated[i])[j].accepting:
+                    countAccepting += 1
+            if countStart > 0:
+                startt = True
+            if countAccepting > 0:
+                acceptingg = True
+            unifiedState = StateAFD(list(repeated[i])[j].name, list(repeated[i])[j].transitions, startt, acceptingg)
+            unified.append(unifiedState)
+            
+        
         # Eliminando estados repetidos
         for i in range(len(unified)):
-            count = 0
             for key, value in afd.items():
-                if count == 0:
-                    if unified[i].name == value.name:
-                        afd[key] = unified[i]
-                        count += 1
-                else:
-                    afd.pop(key)        
-                    
-        return afd
+                if unified[i].name == value.name:
+                    afd[key] = unified[i]   
+
+        miniAFD = {}
+        for i in range(len(afd)):
+            if afd[i] not in miniAFD.values():
+                miniAFD[i] = afd[i]
+
+        return miniAFD
     
 
 
