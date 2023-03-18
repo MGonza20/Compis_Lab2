@@ -328,9 +328,11 @@ class AFN:
                     state.name = replacement
 
         miniAFD = {}
+        index = 0
         for key, state in afd.items():
             if state.name not in [obj.name for obj in miniAFD.values()]:
-                miniAFD[key] = state
+                miniAFD[index] = state
+                index += 1
 
         return miniAFD
     
