@@ -312,22 +312,25 @@ class AFN:
 
         for replacement, same in reps.items():
             check = tuple([obj.name for obj in same])
+            checkAccepting = tuple([obj.accepting for obj in same])
+            checkStart = tuple([obj.start for obj in same])
             for key, state in afd.items():
                 for k, v in state.transitions.items():
                     if v in check:
                         state.transitions[k] = replacement
-                if [obj.accepting for obj in same].count(True) > 0:
+                if  checkAccepting.count(True) > 0:
                     if state.name in check:
                         state.accepting = True
-                if [obj.start for obj in same].count(True) > 0:
+                if checkStart.count(True) > 0:
                     if state.name in check:
                         state.start = True
                 if state.name in check:
                     state.name = replacement
-                
-        
-                    
 
+        miniAFD = {}
+        for key, state in afd.items():
+            if state.name not in [obj.name for obj in miniAFD.values()]:
+                miniAFD[key] = state
 
         return miniAFD
     
