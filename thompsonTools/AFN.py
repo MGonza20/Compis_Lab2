@@ -306,23 +306,23 @@ class AFN:
                 same = []
                 for element in group:
                     same.append(element)
-                reps[chr(65+statesI)] = same
+                reps[chr(65+statesI)] = tuple(same)
                 statesI += 1
 
-        
 
         for replacement, same in reps.items():
+            check = tuple([obj.name for obj in same])
             for key, state in afd.items():
                 for k, v in state.transitions.items():
-                    if v in [obj.name for obj in same]:
+                    if v in check:
                         state.transitions[k] = replacement
                 if [obj.accepting for obj in same].count(True) > 0:
-                    if state.name in [obj.name for obj in same]:
+                    if state.name in check:
                         state.accepting = True
                 if [obj.start for obj in same].count(True) > 0:
-                    if state.name in [obj.name for obj in same]:
+                    if state.name in check:
                         state.start = True
-                if state.name in [obj.name for obj in same]:
+                if state.name in check:
                     state.name = replacement
                 
         
