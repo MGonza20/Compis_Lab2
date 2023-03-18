@@ -229,14 +229,13 @@ class AFD:
             toDoState = toDo.pop(0)
             symbols = self.symbolsDict()
             for elem in toDoState:
-                for key in symbols:
-                    for elem2 in table:
-                        if elem == elem2.treeNo and key == elem2.symbol:
-                            for elemss in elem2.nextpos:
-                                symbols[key].add(elemss)
-                            if list(symbols[key]) not in states:
-                                states.append(list(symbols[key]))
-                                toDo.append(list(symbols[key]))
+                for elem2 in table:
+                    if elem == elem2.treeNo:
+                        if elem2.symbol != '#':
+                            symbols[elem2.symbol].update(elem2.nextpos)
+                            if list(symbols[elem2.symbol]) not in states:
+                                states.append(list(symbols[elem2.symbol]))
+                                toDo.append(list(symbols[elem2.symbol]))
             newState = StateAFD(name=toDoState, transitions=symbols)
             newAFD.append(newState)
             
