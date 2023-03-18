@@ -217,26 +217,13 @@ class AFD:
         ts = {symbol: set() for symbol in symbols}
         return ts
     
+
     def genAFD(self):
         table = self.tableSet
         states = []
-        toDo = []
+        toDo = [self.tree.firstpos]
         newAFD = []
-        firstPos = self.tree.firstpos
-        states.append(firstPos)
-
         symbols = self.symbolsDict()
-        for elem in firstPos:
-            for key in symbols:
-                for elem2 in table:
-                    if elem == elem2.treeNo and key == elem2.symbol:
-                        for elemss in elem2.nextpos:
-                            symbols[key].add(elemss)
-                        if list(symbols[key]) not in states:
-                            states.append(list(symbols[key]))
-                            toDo.append(list(symbols[key]))
-        firstState = StateAFD(name=firstPos, transitions=symbols)
-        newAFD.append(firstState)
 
         while toDo:
             toDoState = toDo.pop(0)
@@ -252,9 +239,9 @@ class AFD:
                                 toDo.append(list(symbols[key]))
             newState = StateAFD(name=toDoState, transitions=symbols)
             newAFD.append(newState)
-        
+            
+        return newAFD
 
-        newStates = []
 
     
 
