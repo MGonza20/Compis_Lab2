@@ -254,29 +254,20 @@ class AFD:
         return newAFD
 
 
-    
+    def draw_afd(self, afd):
 
-    
-
-    def drawAFD(self, table, initial, aceptting):
         graph = pydot.Dot(graph_type='digraph', strict=True)
         graph.set_rankdir('LR')
-    
-        for i in aceptting:
-            graph.add_node(pydot.Node(i))
-        graph.set_node_defaults(shape='circle')
-        for k, v in table.items():
-            for k2, v2 in v.transitions.items():
-                if v.positions in aceptting:
-                    graph.add_node(pydot.Node(str(v.positions), shape='doublecircle'))
-                if v.positions == initial:
-                    graph.add_node(pydot.Node(str(v.positions), color='green', style='filled', shape='circle'))
-                else:
-                    graph.add_node(pydot.Node(str(v.positions)))
-                if v2 or v2 == 0:
-                    graph.add_edge(pydot.Edge(v.positions, v2, label=k2))
-        graph.write_png('afdDir.png')
 
+        for state in afd:
+            for k, v in state.transitions.items():
+                if state.start:
+                    graph.add_node(pydot.Node(str(state.name), color='green', style='filled', shape='circle'))                                               
+                if state.accepting:
+                    graph.add_node(pydot.Node(str(state.name), shape='doublecircle'))
+                graph.add_edge(pydot.Edge(str(state.name), str(v), label=k))
+        graph.write_png('directAFD.png', encoding='utf-8')
+    
     
     def generateAFD(self):
         st = self.syntaxTree()
@@ -288,8 +279,9 @@ class AFD:
         self.genNextPosDict(treeVar)
         self.genNextPos(treeVar)
         self.tableToObj()
-        symsssssssss = self.genAFD()
-        table = self.genAFDTable([], self.tree.firstpos)
+        data = self.genAFD()
+        self.draw_afd(data)
+        
         # table, last = self.genAFD()
         # return self.createNewStates(table, last)
     
@@ -345,9 +337,5 @@ def printPostOrder(tree):
             
 
 
-afdd = AFD('(a|b)+abc?')
-data = afdd.generateAFD()
-table = afdd.defineInitialAndAceptting(*data)
-mini = afdd.minimizeAFD(table)
-aa = 12
-afdd.drawAFD(*data)
+afdd = AFD('(a*|b*)c')
+afdd.generateAFD()
