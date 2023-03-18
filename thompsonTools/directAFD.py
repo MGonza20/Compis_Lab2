@@ -230,10 +230,11 @@ class AFD:
             for key in symbols:
                 for elem2 in table:
                     if elem == elem2.treeNo and key == elem2.symbol:
-                        symbols[key] = elem2.nextpos
-                        if elem2.nextpos not in states:
-                            states.append(elem2.nextpos)
-                            toDo.append(elem2.nextpos)
+                        for elemss in elem2.nextpos:
+                            symbols[key].add(elemss)
+                        if list(symbols[key]) not in states:
+                            states.append(list(symbols[key]))
+                            toDo.append(list(symbols[key]))
         firstState = StateAFD(name=firstPos, transitions=symbols)
         newAFD.append(firstState)
 
@@ -244,10 +245,11 @@ class AFD:
                 for key in symbols:
                     for elem2 in table:
                         if elem == elem2.treeNo and key == elem2.symbol:
-                            symbols[key] = elem2.nextpos
-                            if elem2.nextpos not in states:
-                                states.append(elem2.nextpos)
-                                toDo.append(elem2.nextpos)
+                            for elemss in elem2.nextpos:
+                                symbols[key].add(elemss)
+                            if list(symbols[key]) not in states:
+                                states.append(list(symbols[key]))
+                                toDo.append(list(symbols[key]))
             newState = StateAFD(name=toDoState, transitions=symbols)
             newAFD.append(newState)
         
