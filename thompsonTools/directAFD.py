@@ -260,11 +260,11 @@ class AFD:
         graph.set_rankdir('LR')
 
         for state in afd:
+            if state.start:
+                graph.add_node(pydot.Node(str(state.name), color='green', style='filled', shape='circle'))                                               
+            if state.accepting:
+                graph.add_node(pydot.Node(str(state.name), shape='doublecircle'))
             for k, v in state.transitions.items():
-                if state.start:
-                    graph.add_node(pydot.Node(str(state.name), color='green', style='filled', shape='circle'))                                               
-                if state.accepting:
-                    graph.add_node(pydot.Node(str(state.name), shape='doublecircle'))
                 graph.add_edge(pydot.Edge(str(state.name), str(v), label=k))
         graph.write_png('directAFD.png', encoding='utf-8')
     
