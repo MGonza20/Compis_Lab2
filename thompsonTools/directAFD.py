@@ -212,7 +212,9 @@ class AFD:
         states = []
         toDo = [self.tree.firstpos]
         newAFD = []
+        acceptState = None
 
+        count = 0
         while toDo:
             toDoState = toDo.pop(0)
             symbols = {} 
@@ -227,8 +229,17 @@ class AFD:
                             if list(symbols[elem2.symbol]) not in states:
                                 states.append(list(symbols[elem2.symbol]))
                                 toDo.append(list(symbols[elem2.symbol]))
+                        else:
+                            acceptState = elem2.treeNo
             newState = StateAFD(name=toDoState, transitions=symbols)
+            if not count:
+                newState.start = True
+                count += 1
             newAFD.append(newState)
+
+        for elem in newAFD:
+            if acceptState in elem.name:
+                elem.accepting = True
             
         return newAFD
 
