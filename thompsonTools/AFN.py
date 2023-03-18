@@ -298,60 +298,36 @@ class AFN:
                 break
             state_groups = new_state_groups
 
-        countStates = 0
-        for i in range(len(state_groups)):
-            countStates += len(state_groups[i])
-
-        # Renombrando estados
+        # Crear nuevo AFD
+        statesI = sum(len(group) for group in state_groups)
+        reps = {}
         for group in state_groups:
             if len(group) > 1:
-                name = chr(65+countStates)
-                countStates += 1
-                for st in group:
-                    for key, value in afd.items():
-                        if st.name in value.transitions.values():
-                            for k, v in value.transitions.items():
-                                if v == st.name:
-                                    value.transitions[k] = name
-                        if st.name == value.name:
-                            value.name = name
-        
-        # Haciendo lista de repetidos
-        repeated = []
-        for i in range(len(state_groups)):
-            if len(state_groups[i]) > 1:
-                repeated.append(state_groups[i])
-        
-        unified = []
-        for i in range(len(repeated)):
-            countStart = 0
-            countAccepting = 0
-            startt = False
-            acceptingg = False
-            
-            for j in range(len(repeated[i])):
-                if list(repeated[i])[j].start:
-                    countStart += 1
-                if list(repeated[i])[j].accepting:
-                    countAccepting += 1
-            if countStart > 0:
-                startt = True
-            if countAccepting > 0:
-                acceptingg = True
-            unifiedState = StateAFD(list(repeated[i])[j].name, list(repeated[i])[j].transitions, startt, acceptingg)
-            unified.append(unifiedState)
-            
-        
-        # Eliminando estados repetidos
-        for i in range(len(unified)):
-            for key, value in afd.items():
-                if unified[i].name == value.name:
-                    afd[key] = unified[i]   
+                same = []
+                for element in group:
+                    same.append(element)
+                reps[chr(65+statesI)] = same
+                statesI += 1
 
-        miniAFD = {}
-        for i in range(len(afd)):
-            if afd[i] not in miniAFD.values():
-                miniAFD[i] = afd[i]
+        
+
+        for replacement, same in reps.items():
+            for key, state in afd.items():
+                for k, v in state.transitions.items():
+                    if v in [obj.name for obj in same]:
+                        state.transitions[k] = replacement
+                if [obj.accepting for obj in same].count(True) > 0:
+                    if state.name in [obj.name for obj in same]:
+                        state.accepting = True
+                if [obj.start for obj in same].count(True) > 0:
+                    if state.name in [obj.name for obj in same]:
+                        state.start = True
+                if state.name in [obj.name for obj in same]:
+                    state.name = replacement
+                
+        
+                    
+
 
         return miniAFD
     
