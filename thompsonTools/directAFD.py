@@ -3,6 +3,7 @@ from Format import Format
 import os
 os.environ["PATH"] += os.pathsep + 'C:/Program Files (x86)/Graphviz/bin'    
 import pydot
+from StateAFD import StateAFD
 
 class Node:
     def __init__(self, symbol, parent = None, left = None, right = None, no = None, anulable = False, firstpos = [], lastpos = []):
@@ -15,17 +16,11 @@ class Node:
         self.firstpos = firstpos
         self.lastpos = lastpos
 
-class nextPos:
-    def __init__(self, symbol, nextpos = []):
+class npObj:
+    def __init__(self, treeNo, symbol, nextpos = []):
         self.symbol = symbol
         self.nextpos = nextpos        
-
-class stateObj:
-    def __init__(self, positions, transitions):
-        self.positions = positions
-        self.transitions = transitions
-        self.aceptting = False
-        self.initial = False
+        self.treeNo = treeNo
 
 
 class AFD:
@@ -33,6 +28,7 @@ class AFD:
         self.regex = regex
         self.tree = None
         self.table = {}
+        self.tableSet = set()
         self.transitions = {}
 
     def augmentRegex(self):
@@ -207,63 +203,59 @@ class AFD:
             for key2 in self.table[key]:
                 s = key2
                 nP = self.table[key][key2]
-                self.table[key] = nextPos(symbol=s, nextpos=nP)
-        return self.table
+                self.tableSet.add(npObj(treeNo=key, symbol=s, nextpos=nP))
+        return self.tableSet
         
 
     def symbolsDict(self):
         symbols = set()
-        for i in range(len(self.table)):
-            sym = self.table[i+1].symbol
-            symbols.add(sym)
-        symbols.remove('#')
+        for elem in self.tableSet:
+            if elem.symbol != '#':
+                symbols.add(elem.symbol)
 
         symbols = sorted(list(symbols))
         ts = {symbol: set() for symbol in symbols}
         return ts
     
-    def genAFD(self, state=None):
-        table = self.tableToObj()
-        last = len(table)
-        
-        transitionTable = {}
+    def genAFD(self):
+        table = self.tableSet
         states = []
-        done = []
+        toDo = []
+        newAFD = []
+        firstPos = self.tree.firstpos
+        states.append(firstPos)
 
-        count = 0
-        if not state:
-            firstValue = set(self.table[1].nextpos)
-            symbols = self.symbolsDict()
-            for num in firstValue:
-                for key in symbols:
-                    if table[num].symbol == key:
-                        for el in table[num].nextpos:
-                            symbols[key].add(el)
-            stat = stateObj(firstValue, symbols)
-            transitionTable[count] = stat
-            done.append(firstValue)
-            count += 1
-            for k, v in symbols.items():
-                if v != firstValue and v:
-                    states.append(v)
+        symbols = self.symbolsDict()
+        for elem in firstPos:
+            for key in symbols:
+                for elem2 in table:
+                    if elem == elem2.treeNo and key == elem2.symbol:
+                        symbols[key] = elem2.nextpos
+                        if elem2.nextpos not in states:
+                            states.append(elem2.nextpos)
+                            toDo.append(elem2.nextpos)
+        firstState = StateAFD(name=firstPos, transitions=symbols)
+        newAFD.append(firstState)
 
-        while states:
-            state = states.pop(0)
+        while toDo:
+            toDoState = toDo.pop(0)
             symbols = self.symbolsDict()
-            for num in state:
+            for elem in toDoState:
                 for key in symbols:
-                    if table[num].symbol == key:
-                        for el in table[num].nextpos:
-                            symbols[key].add(el)
-            stat = stateObj(state, symbols)
-            transitionTable[count] = stat
-            done.append(state)
-            count += 1
-            for k, v in symbols.items():
-                if v not in done and v:
-                    states.append(v)
-        return transitionTable, last
+                    for elem2 in table:
+                        if elem == elem2.treeNo and key == elem2.symbol:
+                            symbols[key] = elem2.nextpos
+                            if elem2.nextpos not in states:
+                                states.append(elem2.nextpos)
+                                toDo.append(elem2.nextpos)
+            newState = StateAFD(name=toDoState, transitions=symbols)
+            newAFD.append(newState)
+        
+
+        newStates = []
+
     
+
     
     def createNewStates(self, table, last):
 
@@ -318,7 +310,7 @@ class AFD:
                 if v2 or v2 == 0:
                     graph.add_edge(pydot.Edge(v.positions, v2, label=k2))
         graph.write_png('afdDir.png')
-    
+
     
     def generateAFD(self):
         st = self.syntaxTree()
@@ -329,8 +321,11 @@ class AFD:
         treeVar = self.tree
         self.genNextPosDict(treeVar)
         self.genNextPos(treeVar)
-        table, last = self.genAFD()
-        return self.createNewStates(table, last)
+        self.tableToObj()
+        symsssssssss = self.genAFD()
+        table = self.genAFDTable([], self.tree.firstpos)
+        # table, last = self.genAFD()
+        # return self.createNewStates(table, last)
     
 
     def generatelP(self):
