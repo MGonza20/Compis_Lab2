@@ -207,32 +207,23 @@ class AFD:
         return self.tableSet
         
 
-    def symbolsDict(self):
-        symbols = set()
-        for elem in self.tableSet:
-            if elem.symbol != '#':
-                symbols.add(elem.symbol)
-
-        symbols = sorted(list(symbols))
-        ts = {symbol: set() for symbol in symbols}
-        return ts
-    
-
     def genAFD(self):
         table = self.tableSet
         states = []
         toDo = [self.tree.firstpos]
         newAFD = []
-        symbols = self.symbolsDict()
 
         while toDo:
             toDoState = toDo.pop(0)
-            symbols = self.symbolsDict()
+            symbols = {} 
             for elem in toDoState:
                 for elem2 in table:
                     if elem == elem2.treeNo:
                         if elem2.symbol != '#':
-                            symbols[elem2.symbol].update(elem2.nextpos)
+                            if elem2.symbol not in symbols:
+                                symbols[elem2.symbol] = set(elem2.nextpos)
+                            else:
+                                symbols[elem2.symbol].update(elem2.nextpos)
                             if list(symbols[elem2.symbol]) not in states:
                                 states.append(list(symbols[elem2.symbol]))
                                 toDo.append(list(symbols[elem2.symbol]))
@@ -244,40 +235,6 @@ class AFD:
 
     
 
-    
-    def createNewStates(self, table, last):
-
-        aceptting  = []
-        count = 0
-        for kk, vv in table.items():
-            for kk2, vv2 in vv.transitions.items():
-                if last in vv2:
-                    count += 1
-        for kkk, vvv in table.items():
-            if last in vvv.positions:
-                count += 1
-        if count:
-            aceptting.append(last)
-        
-        if aceptting[0] in table[len(table)-1].positions:
-            aceptting[0] = len(table)-1
-            last = len(table)-1
-
-        for k, v in table.items():
-            for k2, v2 in v.transitions.items():
-                for k3, v3 in table.items():
-                    if v2 == v3.positions:
-                        v.transitions[k2] = k3
-        for k, v in table.items():
-            v.positions = k
-        
-        initial = table[0].positions
-
-        for k, v in table.items():
-            for k2, v2 in v.transitions.items():
-                if v2 == last:
-                    aceptting.append(k)
-        return table, initial, aceptting
     
 
     def drawAFD(self, table, initial, aceptting):
