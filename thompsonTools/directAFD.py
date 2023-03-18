@@ -240,7 +240,17 @@ class AFD:
         for elem in newAFD:
             if acceptState in elem.name:
                 elem.accepting = True
-            
+        
+        # Changing the name of the states
+        count = 0
+        for state in newAFD:
+            for st in newAFD:
+                for key, transition in st.transitions.items():
+                    if transition == set(state.name):
+                        st.transitions[key] = chr(65+count)
+            state.name = chr(65+count)
+            count += 1
+
         return newAFD
 
 
