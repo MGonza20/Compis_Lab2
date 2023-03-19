@@ -1,8 +1,8 @@
 
 
-from Bridge import Bridge
-from Format import Format
-from StateAFD import StateAFD
+from .Bridge import Bridge
+from .Format import Format
+from .StateAFD import StateAFD
 import pydot
 import networkx as nx
 from graphviz import Digraph

@@ -256,12 +256,84 @@ class AFD:
             count += 1
 
         return newAFD
+    
+
+    def minimizationAFD(self):
+        # Creando copia del AFD
+        afd = self.genAFD()
+
+        # Unir estados de aceptacion y que no son de aceptacion
+        accepting_states = set(state for state in afd if state.accepting)
+        non_accepting_states = set(state for state in afd if not state.accepting)
+        state_groups = [accepting_states, non_accepting_states]
+
+        # Repetir hasta que no se puedan unir mas estados
+        while True:
+            new_state_groups = []
+            for group in state_groups:
+                # Por cada grupo de estados, agrupar por transiciones
+                transition_groups = {}
+                for state in group:
+                    transition = tuple(sorted(state.transitions.values()))
+                    if transition not in transition_groups:
+                        transition_groups[transition] = set()
+                    transition_groups[transition].add(state)
+
+                # Por cada grupo de transiciones, unir estados
+                for transition_group in transition_groups.values():
+                    if len(transition_group) > 1:
+                        new_state_groups.append(transition_group)
+                    else:
+                        new_state_groups.append({transition_group.pop()})
+
+            # Si ya no se pueden unir mas estados, terminar
+            if len(new_state_groups) == len(state_groups):
+                break
+            state_groups = new_state_groups
+
+        # Crear nuevo AFD
+        statesI = sum(len(group) for group in state_groups)
+        reps = {}
+        for group in state_groups:
+            if len(group) > 1:
+                same = []
+                for element in group:
+                    same.append(element)
+                reps[chr(65+statesI)] = tuple(same)
+                statesI += 1
+
+
+        for replacement, same in reps.items():
+            check = tuple([obj.name for obj in same])
+            checkAccepting = tuple([obj.accepting for obj in same])
+            checkStart = tuple([obj.start for obj in same])
+            for key, state in afd.items():
+                for k, v in state.transitions.items():
+                    if v in check:
+                        state.transitions[k] = replacement
+                if  checkAccepting.count(True) > 0:
+                    if state.name in check:
+                        state.accepting = True
+                if checkStart.count(True) > 0:
+                    if state.name in check:
+                        state.start = True
+                if state.name in check:
+                    state.name = replacement
+
+        miniAFD = {}
+        index = 0
+        for state in afd:
+            if state.name not in [obj.name for obj in miniAFD.values()]:
+                miniAFD[index] = state
+                index += 1
+
+        return miniAFD
+
 
 
     def draw_afd(self, afd):
 
         G = nx.MultiGraph()
-
         for state in afd:
             if state.start:
                 G.add_node(str(state.name), color='green', style='filled', shape='circle')
@@ -281,8 +353,40 @@ class AFD:
         dot.attr(rankdir='LR')
         dot.render('directAFD/directAFD', format='png')
 
+
+    def draw_mini_afd(self):
+        afd = self.minimizationAFD()
+
+        G = nx.MultiGraph()
+        for state in afd.values():
+            if state.start:
+                G.add_node(state.name, color='green', style='filled', shape='circle')
+            if state.accepting:
+                G.add_node(state.name, shape='doublecircle')
+            for k, v in state.transitions.items():
+                if state.start:
+                    G.add_node(state.name, color='green', style='filled', shape='circle')
+                if state.accepting:
+                    G.add_node(state.name, shape='doublecircle')
+                else:
+                    if v != 'estado muerto':
+                        G.add_node(v)
+                if v != 'estado muerto':
+                    G.add_edge(state.name, v, label=k, dir='forward')
+                   
+        dot = Digraph()
+        for u, v, data in G.edges(data=True):
+            dot.edge(u, v, label=data['label'], dir=data['dir'])
+        for node in G.nodes:
+            attrs = G.nodes[node]
+            dot.node(node, **attrs)
+
+        dot.attr(rankdir='LR')
+        dot.render('directAFD/miniDirectAFD', format='png')
+
+
     
-    def simulateMiniAFD(self, string, afd):
+    def simulateDirectAFD(self, string, afd):
         current_state = afd[0]
         for symbol in string:
             if symbol not in current_state.transitions:
@@ -309,6 +413,19 @@ class AFD:
         data = self.genAFD()
         self.draw_afd(data)
 
+    
+    def generateMiniAFD(self):
+        st = self.syntaxTree()
+        anulable = self.anulable(st[0])
+        fP = self.firstPosMethod(anulable)
+        lP = self.lastPosMethod(fP)
+        self.tree = lP
+        treeVar = self.tree
+        self.genNextPosDict(treeVar)
+        self.genNextPos(treeVar)
+        self.tableToObj()
+        self.draw_mini_afd()
+
 
     def simulateMini(self, miniString):
         st = self.syntaxTree()
@@ -321,7 +438,7 @@ class AFD:
         self.genNextPos(treeVar)
         self.tableToObj()
         data = self.genAFD()
-        if self.simulateMiniAFD(miniString, data):
+        if self.simulateDirectAFD(miniString, data):
             print('\nLa cadena pertenece al lenguaje')
         else:
             print('\nLa cadena no pertenece al lenguaje')
@@ -369,4 +486,5 @@ def printPostOrder(tree):
 
 afdd = AFD('(a*|b*)c')
 afdd.generateAFD()
-afdd.simulateMini('aaaaaaaaaac')
+afdd.generateMiniAFD()
+# afdd.simulateMini('aaaaaaaaaac')

@@ -7,11 +7,13 @@ class Compilador:
         pass
 
     def menu(self):
-        print("1. Regex a AFN")
+        print("1. Visualizar AFD generado a partir del algoritmo de construccion de subconjuntos\n \
+                  y su minimizacion\n")
+        print("2. Visualizar AFD generado a partir del algoritmo de construccion directa y su minimizacion\n")
         print("2. Salir\n")
     
     def run(self):
-        print("\n¡Bienvenid@ a la primer aventura del dragon!\n")
+        print("\n¡Bienvenid@ a la segunda aventura del dragon!\n")
         while True:
             self.menu()
             option = input("Opcion: ")
