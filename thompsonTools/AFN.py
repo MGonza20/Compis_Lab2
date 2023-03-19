@@ -349,7 +349,7 @@ class AFN:
             dot.node(node, **attrs)
 
         dot.attr(rankdir='LR')
-        dot.render('afn/AfnToAfd')
+        dot.render('afn/AfnToAfd', format='png')
 
 
 
@@ -459,7 +459,7 @@ class AFN:
             dot.node(node, **attrs)
 
         dot.attr(rankdir='LR')
-        dot.render('afn/miniAFD')
+        dot.render('afn/miniAFD', format='png')
 
             
 aff = AFN("(0|1)0*1(1|0)*")
