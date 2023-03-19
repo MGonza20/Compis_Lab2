@@ -209,7 +209,32 @@ class AFN:
     def manyKleene(self, states):
         kleene = [self.cerraduraKleene(state) for state in states]
         return list(set(sum(kleene, [])))
-        
+    
+
+    def simulateAFN(self, string):
+        # Se obtiene el conjunto de estados a los que se puede llegar desde el estado inicial
+        currentStates = self.cerraduraKleene(self.afn.start)
+
+        for symbol in string:
+            # Se obtiene el conjunto de estados a los que se puede llegar desde el conjunto de estados actuales
+            nextStates = self.manyKleene(self.manyMove(currentStates, symbol))
+
+            # Si no hay estados a los que se pueda llegar la cadena no es aceptada
+            if not nextStates:
+                return False
+
+            # Se actualiza el conjunto de estados actuales
+            currentStates = nextStates
+
+        # Se verifica si alguno de los estados actuales es el estado final
+        # para determinar si la cadena es aceptada
+        for state in currentStates:
+            if state == self.afn.end:
+                return True
+
+        return False
+
+    
 
     def toAFD(self):
         counter = 0
@@ -364,10 +389,11 @@ class AFN:
             
 aff = AFN("(a|b)*abb")
 aff.MYT()
+print(aff.simulateNFA("ababb"))
 # aff.graph_myt()
 aff.toAFD()
-newAFD = aff.minimizationAFD(aff.afd)
-lett = 123
+# newAFD = aff.minimizationAFD(aff.afd)
+# lett = 123
 
 # aff.draw_afd()
 
