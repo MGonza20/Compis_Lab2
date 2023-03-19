@@ -391,10 +391,41 @@ class AFN:
                 index += 1
 
         return miniAFD
+    
+
+    def simulateMiniAFD(self, string):
+        afd = self.minimizationAFD(self.assignStates())
+        current_state = afd[0]
+        for symbol in string:
+            if symbol not in current_state.transitions:
+                return False
+            current_state = [state for key, state in afd.items() if state.name == current_state.transitions[symbol]][0]
+        return current_state.accepting
+    
+
+    def draw_mini_afd(self):
+        afd = self.minimizationAFD(self.assignStates())
+
+        graph = pydot.Dot(graph_type='digraph', strict=True)
+        graph.set_rankdir('LR')
+
+        for state in afd.values():
+            for k, v in state.transitions.items():
+                if state.start:
+                    graph.add_node(pydot.Node(str(state.name), color='green', style='filled', shape='circle'))                                               
+                if state.accepting:
+                    graph.add_node(pydot.Node(str(state.name), shape='doublecircle'))
+                else:
+                    if v != 'estado muerto':
+                        graph.add_node(pydot.Node(str(v)))
+                if v != 'estado muerto':
+                    graph.add_edge(pydot.Edge(str(state.name), str(v), label=k))
+        graph.write_png('miniAFD.png', encoding='utf-8')
               
 
             
 aff = AFN("(a|b)*abb")
+
 aff.MYT()
 print(aff.simulateAFN("abb"))
 aff.graph_myt()
@@ -402,6 +433,9 @@ aff.graph_myt()
 aff.toAFD()
 print(aff.simulateAFD("abb"))
 aff.draw_afd()
+
+print(aff.simulateMiniAFD("abb"))
+aff.draw_mini_afd()
 
 
 
