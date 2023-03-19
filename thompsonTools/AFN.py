@@ -300,6 +300,27 @@ class AFN:
         return current_state.accepting
 
 
+    def draw_afd(self):
+        afd = self.assignStates()
+
+        graph = pydot.Dot(graph_type='digraph', strict=True)
+        graph.set_rankdir('LR')
+
+        for state in afd.values():
+            for k, v in state.transitions.items():
+                if state.start:
+                    graph.add_node(pydot.Node(str(state.name), color='green', style='filled', shape='circle'))                                               
+                if state.accepting:
+                    graph.add_node(pydot.Node(str(state.name), shape='doublecircle'))
+                else:
+                    if v != 'estado muerto':
+                        graph.add_node(pydot.Node(str(v)))
+                if v != 'estado muerto':
+                    graph.add_edge(pydot.Edge(str(state.name), str(v), label=k))
+        graph.write_png('AfnToAfd.png', encoding='utf-8')
+
+
+
     def minimizationAFD(self, afd):
         # Creando copia del AFD
         afd = self.assignStates().copy()
@@ -370,31 +391,7 @@ class AFN:
                 index += 1
 
         return miniAFD
-    
-
-
-
-    def draw_afd(self):
-        afd = self.assignStates()
-
-        graph = pydot.Dot(graph_type='digraph', strict=True)
-        graph.set_rankdir('LR')
-
-        for state in afd.values():
-            for k, v in state.transitions.items():
-                if state.start:
-                    graph.add_node(pydot.Node(str(state.name), color='green', style='filled', shape='circle'))                                               
-                if state.accepting:
-                    graph.add_node(pydot.Node(str(state.name), shape='doublecircle'))
-                else:
-                    if v != 'estado muerto':
-                        graph.add_node(pydot.Node(str(v)))
-                if v != 'estado muerto':
-                    graph.add_edge(pydot.Edge(str(state.name), str(v), label=k))
-        graph.write_png('AfnToAfd.png', encoding='utf-8')
-
-            
-
+              
 
             
 aff = AFN("(a|b)*abb")
