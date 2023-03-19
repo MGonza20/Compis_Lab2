@@ -1,13 +1,14 @@
 digraph {
-	I -> B [label=a dir=forward]
-	I -> I [label=b dir=forward]
-	B -> D [label=b dir=forward]
-	D -> H [label=b dir=forward]
-	H -> H [label=a dir=forward]
-	H -> H [label=b dir=forward]
-	I [color=green shape=circle style=filled]
+	A -> B [label=a dir=forward]
+	A -> C [label=b dir=forward]
+	B -> C [label=b dir=forward]
+	C -> D [label=a dir=forward]
+	D -> D [label=a dir=forward]
+	D -> E [label=c dir=forward]
+	A [color=green shape=circle style=filled]
 	B
-	D
-	H [shape=doublecircle]
+	C
+	D [shape=doublecircle]
+	E [shape=doublecircle]
 	rankdir=LR
 }

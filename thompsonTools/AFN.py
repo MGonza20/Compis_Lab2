@@ -320,7 +320,11 @@ class AFN:
         for symbol in string:
             if symbol not in current_state.transitions:
                 return False
-            current_state = [state for key, state in afd.items() if state.name == current_state.transitions[symbol]][0]
+            current_state = [state for key, state in afd.items() if state.name == current_state.transitions[symbol]]
+            if not current_state:
+                return False
+            else:
+                current_state = current_state[0]
         return current_state.accepting
 
 
@@ -431,7 +435,11 @@ class AFN:
         for symbol in string:
             if symbol not in current_state.transitions:
                 return False
-            current_state = [state for key, state in afd.items() if state.name == current_state.transitions[symbol]][0]
+            current_state = [state for key, state in afd.items() if state.name == current_state.transitions[symbol]]
+            if not current_state:
+                return False
+            else:
+                current_state = current_state[0]
         return current_state.accepting
     
 
@@ -464,18 +472,18 @@ class AFN:
         dot.render('afn/miniAFD', format='png')
 
             
-aff = AFN("(b|b)*abb(a|b)*")
+aff = AFN("(a|ε)b(a+)c?")
 
-# var = "00"
+var = "abac"
 aff.MYT()
-# print(aff.simulateAFN(var))
+print(aff.simulateAFN(var))
 aff.graph_myt()
 
 aff.toAFD()
-# print(aff.simulateAFD(var))
+print(aff.simulateAFD(var))
 aff.draw_afd()
 
-# print(aff.simulateMiniAFD(var))
+print(aff.simulateMiniAFD(var))
 aff.draw_mini_afd()
 
 

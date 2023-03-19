@@ -338,5 +338,5 @@ def printPostOrder(tree):
             
 
 
-afdd = AFD('(b|b)*abb(a|b)*')
+afdd = AFD('(a|b)*a(a|b)(a|b)')
 afdd.generateAFD()
