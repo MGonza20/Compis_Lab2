@@ -4,6 +4,8 @@ from Bridge import Bridge
 from Format import Format
 from StateAFD import StateAFD
 import pydot
+import networkx as nx
+import matplotlib.pyplot as plt
 
 import os
 os.environ["PATH"] += os.pathsep + 'C:/Program Files (x86)/Graphviz/bin'    
@@ -321,7 +323,7 @@ class AFN:
 
 
 
-    def minimizationAFD(self, afd):
+    def minimizationAFD(self):
         # Creando copia del AFD
         afd = self.assignStates().copy()
 
@@ -394,7 +396,7 @@ class AFN:
     
 
     def simulateMiniAFD(self, string):
-        afd = self.minimizationAFD(self.assignStates())
+        afd = self.minimizationAFD()
         current_state = afd[0]
         for symbol in string:
             if symbol not in current_state.transitions:
@@ -404,27 +406,28 @@ class AFN:
     
 
     def draw_mini_afd(self):
-        afd = self.minimizationAFD(self.assignStates())
+        afd = self.minimizationAFD()
 
-        graph = pydot.Dot(graph_type='digraph', strict=True)
-        graph.set_rankdir('LR')
-
+        G = nx.MultiGraph()
         for state in afd.values():
             for k, v in state.transitions.items():
                 if state.start:
-                    graph.add_node(pydot.Node(str(state.name), color='green', style='filled', shape='circle'))                                               
+                    G.add_node(state.name, color='green', style='filled', shape='circle')
                 if state.accepting:
-                    graph.add_node(pydot.Node(str(state.name), shape='doublecircle'))
-                else:
-                    if v != 'estado muerto':
-                        graph.add_node(pydot.Node(str(v)))
-                if v != 'estado muerto':
-                    graph.add_edge(pydot.Edge(str(state.name), str(v), label=k))
-        graph.write_png('miniAFD.png', encoding='utf-8')
+                    G.add_node(state.name, shape='doublecircle')
+
+                G.add_node(v)
+                G.add_edge(state.name, v, label=k, dir='forward')
+
+        pydot_graph = nx.drawing.nx_pydot.to_pydot(G)
+        pydot_graph.set_rankdir('LR')
+        png_bytes = pydot_graph.create_png()
+        with open('miniAFD.png', 'wb') as f:
+            f.write(png_bytes)
               
 
             
-aff = AFN("(a|b)*abb")
+aff = AFN("(0|1)0*1(1|0)*")
 
 aff.MYT()
 print(aff.simulateAFN("abb"))
