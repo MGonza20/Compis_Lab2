@@ -200,7 +200,8 @@ class AFN:
             dot.node(node, **attrs)
 
         dot.attr(rankdir='LR')
-        dot.render('afn/MYT')
+        dot.render('afn/MYT', format='png')
+
 
 
 
