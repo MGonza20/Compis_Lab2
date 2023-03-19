@@ -179,7 +179,7 @@ class AFN:
                     else:
                         graph.add_node(pydot.Node(str(v2[i])))
                     graph.add_edge(pydot.Edge(str(k), str(v2[i]), label=k2))
-        graph.write_png('output1111.png', encoding='utf-8')
+        graph.write_png('AFN.png', encoding='utf-8')
 
 
     def cerraduraKleene(self, state, checked=None):
@@ -399,15 +399,14 @@ class AFN:
             
 aff = AFN("(a|b)*abb")
 aff.MYT()
-print(aff.simulateAFN("jjjjjabb"))
-aff.toAFD()
-print(aff.simulateAFD("jjjjjabb"))
-# aff.graph_myt()
-aff.toAFD()
-# newAFD = aff.minimizationAFD(aff.afd)
-# lett = 123
+print(aff.simulateAFN("abb"))
+aff.graph_myt()
 
-# aff.draw_afd()
+aff.toAFD()
+print(aff.simulateAFD("abb"))
+aff.draw_afd()
+
+
 
 
         
