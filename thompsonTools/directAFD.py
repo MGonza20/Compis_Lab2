@@ -213,7 +213,7 @@ class AFD:
 
     def genAFD(self):
         table = self.tableSet
-        states = []
+        states = [self.tree.firstpos]
         toDo = [self.tree.firstpos]
         newAFD = []
         acceptState = None
@@ -338,5 +338,5 @@ def printPostOrder(tree):
             
 
 
-afdd = AFD('(0|1)0*1(1|0)*')
+afdd = AFD('(b|b)*abb(a|b)*')
 afdd.generateAFD()

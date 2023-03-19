@@ -447,10 +447,12 @@ class AFN:
                     G.add_node(state.name, color='green', style='filled', shape='circle')
                 if state.accepting:
                     G.add_node(state.name, shape='doublecircle')
-                G.add_node(v)
-                G.add_edge(state.name, v, label=k, dir='forward')
-
-        
+                else:
+                    if v != 'estado muerto':
+                        G.add_node(v)
+                if v != 'estado muerto':
+                    G.add_edge(state.name, v, label=k, dir='forward')
+                   
         dot = Digraph()
         for u, v, data in G.edges(data=True):
             dot.edge(u, v, label=data['label'], dir=data['dir'])
@@ -462,18 +464,18 @@ class AFN:
         dot.render('afn/miniAFD', format='png')
 
             
-aff = AFN("(0|1)0*1(1|0)*")
+aff = AFN("(b|b)*abb(a|b)*")
 
-var = "00"
+# var = "00"
 aff.MYT()
-print(aff.simulateAFN(var))
+# print(aff.simulateAFN(var))
 aff.graph_myt()
 
 aff.toAFD()
-print(aff.simulateAFD(var))
+# print(aff.simulateAFD(var))
 aff.draw_afd()
 
-print(aff.simulateMiniAFD(var))
+# print(aff.simulateMiniAFD(var))
 aff.draw_mini_afd()
 
 
