@@ -397,6 +397,20 @@ class AFD:
             else:
                 current_state = current_state[0]
         return current_state.accepting
+    
+
+    def simulateMiniAFD(self, string):
+        afd = self.minimizationAFD()
+        current_state = afd[0]
+        for symbol in string:
+            if symbol not in current_state.transitions:
+                return False
+            current_state = [state for key, state in afd.items() if state.name == current_state.transitions[symbol]]
+            if not current_state:
+                return False
+            else:
+                current_state = current_state[0]
+        return current_state.accepting
 
 
     
@@ -427,7 +441,7 @@ class AFD:
         self.draw_mini_afd()
 
 
-    def simulateMini(self, miniString):
+    def simulateDirectAFD_General(self, miniString):
         st = self.syntaxTree()
         anulable = self.anulable(st[0])
         fP = self.firstPosMethod(anulable)
@@ -439,9 +453,29 @@ class AFD:
         self.tableToObj()
         data = self.genAFD()
         if self.simulateDirectAFD(miniString, data):
-            print('\nLa cadena pertenece al lenguaje')
+            print('Simulacion AFD Directo: Cadena aceptada')
         else:
-            print('\nLa cadena no pertenece al lenguaje')
+            print('Simulacion AFD Directo: Cadena no aceptada')
+
+
+    def simulateMiniAFD_General(self, miniString):
+        st = self.syntaxTree()
+        anulable = self.anulable(st[0])
+        fP = self.firstPosMethod(anulable)
+        lP = self.lastPosMethod(fP)
+        self.tree = lP
+        treeVar = self.tree
+        self.genNextPosDict(treeVar)
+        self.genNextPos(treeVar)
+        self.tableToObj()
+        data = self.genAFD()
+        if self.simulateMiniAFD(miniString):
+            print('Simulacion AFD Minimizado: Cadena aceptada')
+        else:
+            print('Simulacion AFD Minimizado: Cadena no aceptada')
+
+
+        
         
     
 
@@ -485,6 +519,9 @@ def printPostOrder(tree):
 
 
 afdd = AFD('(a*|b*)c')
+var = 'c'
 afdd.generateAFD()
+afdd.simulateDirectAFD_General(var)
 afdd.generateMiniAFD()
-# afdd.simulateMini('aaaaaaaaaac')
+afdd.simulateMiniAFD_General(var)
+
