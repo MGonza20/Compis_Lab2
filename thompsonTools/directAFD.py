@@ -518,12 +518,12 @@ def printPostOrder(tree):
 
             
 
-string = ''
+string = 'ab*ab*'
 string_no_spaces = string.replace(' ', '')
 syntax = Syntax(string_no_spaces)
 if string_no_spaces and syntax.checkParenthesis() and syntax.checkDot() and not syntax.checkMultU() and syntax.checkOperator() and syntax.checkOperatorValid() and syntax.checkLastNotU():
     afdd = AFD(string_no_spaces)
-    var = ''
+    var = 'aaab'
     afdd.generateAFD()
     afdd.simulateDirectAFD_General(var)
     afdd.generateMiniAFD()

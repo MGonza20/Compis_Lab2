@@ -1,42 +1,24 @@
 digraph {
-	21 -> 28 [label="ε" dir=forward]
-	20 -> 21 [label=0 dir=forward]
-	23 -> 28 [label="ε" dir=forward]
-	22 -> 23 [label=1 dir=forward]
-	24 -> 20 [label="ε" dir=forward]
-	24 -> 22 [label="ε" dir=forward]
-	28 -> 26 [label="ε" dir=forward]
-	28 -> 30 [label="ε" dir=forward]
-	27 -> 26 [label="ε" dir=forward]
-	27 -> 30 [label="ε" dir=forward]
-	26 -> 27 [label=0 dir=forward]
-	30 -> 38 [label=1 dir=forward]
-	38 -> 36 [label="ε" dir=forward]
-	38 -> 39 [label="ε" dir=forward]
-	33 -> 37 [label="ε" dir=forward]
-	32 -> 33 [label=1 dir=forward]
-	35 -> 37 [label="ε" dir=forward]
-	34 -> 35 [label=0 dir=forward]
-	36 -> 32 [label="ε" dir=forward]
-	36 -> 34 [label="ε" dir=forward]
-	37 -> 36 [label="ε" dir=forward]
-	37 -> 39 [label="ε" dir=forward]
+	12 -> 16 [label=a dir=forward]
+	16 -> 14 [label="ε" dir=forward]
+	16 -> 18 [label="ε" dir=forward]
+	15 -> 14 [label="ε" dir=forward]
+	15 -> 18 [label="ε" dir=forward]
+	14 -> 15 [label=b dir=forward]
+	18 -> 22 [label=a dir=forward]
+	22 -> 20 [label="ε" dir=forward]
+	22 -> 23 [label="ε" dir=forward]
+	21 -> 20 [label="ε" dir=forward]
+	21 -> 23 [label="ε" dir=forward]
+	20 -> 21 [label=b dir=forward]
+	12 [color=green shape=circle style=filled]
+	16
+	15
+	14
+	18
+	22
 	21
 	20
-	23
-	22
-	24 [color=green shape=circle style=filled]
-	28
-	27
-	26
-	30
-	38
-	33
-	32
-	35
-	34
-	36
-	37
-	39 [shape=doublecircle]
+	23 [shape=doublecircle]
 	rankdir=LR
 }

@@ -489,13 +489,13 @@ class AFN:
         
 
 
-string = ''
+string = 'ab*ab*'
 string_no_spaces = string.replace(' ', '')
 syntax = Syntax(string_no_spaces)
 syntax = Syntax(string_no_spaces)
 if string_no_spaces and syntax.checkParenthesis() and syntax.checkDot() and not syntax.checkMultU() and syntax.checkOperator() and syntax.checkOperatorValid() and syntax.checkLastNotU():
     aff = AFN(string_no_spaces)
-    cadena_sim = ""
+    cadena_sim = "aaab"
     aff.draw_all()
     aff.AFsimulations(cadena_sim)
 else:

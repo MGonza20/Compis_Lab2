@@ -1,10 +1,8 @@
 digraph {
-	A -> B [label=0 dir=forward]
-	A -> B [label=1 dir=forward]
-	B -> B [label=0 dir=forward]
-	B -> C [label=1 dir=forward]
-	C -> C [label=1 dir=forward]
-	C -> C [label=0 dir=forward]
+	A -> B [label=a dir=forward]
+	B -> B [label=b dir=forward]
+	B -> C [label=a dir=forward]
+	C -> C [label=b dir=forward]
 	A [color=green shape=circle style=filled]
 	B
 	C [shape=doublecircle]
