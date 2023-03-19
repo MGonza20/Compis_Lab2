@@ -518,11 +518,12 @@ def printPostOrder(tree):
 
             
 
-string = '(0|1)0*1(1|0)*'
-syntax = Syntax(string)
-if string and syntax.checkParenthesis() and syntax.checkDot() and not syntax.checkMultU() and syntax.checkOperator() and syntax.checkOperatorValid() and syntax.checkLastNotU():
-    afdd = AFD(string)
-    var = '001'
+string = ''
+string_no_spaces = string.replace(' ', '')
+syntax = Syntax(string_no_spaces)
+if string_no_spaces and syntax.checkParenthesis() and syntax.checkDot() and not syntax.checkMultU() and syntax.checkOperator() and syntax.checkOperatorValid() and syntax.checkLastNotU():
+    afdd = AFD(string_no_spaces)
+    var = ''
     afdd.generateAFD()
     afdd.simulateDirectAFD_General(var)
     afdd.generateMiniAFD()

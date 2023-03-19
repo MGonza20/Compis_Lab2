@@ -490,9 +490,11 @@ class AFN:
 
 
 string = ''
-syntax = Syntax(string)
-if string and syntax.checkParenthesis() and syntax.checkDot() and not syntax.checkMultU() and syntax.checkOperator() and syntax.checkOperatorValid() and syntax.checkLastNotU():
-    aff = AFN(string)
+string_no_spaces = string.replace(' ', '')
+syntax = Syntax(string_no_spaces)
+syntax = Syntax(string_no_spaces)
+if string_no_spaces and syntax.checkParenthesis() and syntax.checkDot() and not syntax.checkMultU() and syntax.checkOperator() and syntax.checkOperatorValid() and syntax.checkLastNotU():
+    aff = AFN(string_no_spaces)
     cadena_sim = ""
     aff.draw_all()
     aff.AFsimulations(cadena_sim)
