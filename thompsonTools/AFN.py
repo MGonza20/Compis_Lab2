@@ -290,6 +290,24 @@ class AFN:
         return afd
     
 
+    def simulateAFD(self, string):
+        afd = self.assignStates()
+        current_state = afd[0]
+        for symbol in string:
+            current_state = [state for key, state in afd.items() if state.name == current_state.transitions[symbol]][0]
+        return current_state.accepting
+
+    
+
+    def simulateAutomataFinitoDeterminista(self, string):
+        afd = self.assignStates()
+        current_state = afd[0]
+        for symbol in string:
+            # Descripcion: 
+            current_state = afd[current_state.transitions[symbol]]
+        return current_state.accepting
+
+
     def minimizationAFD(self, afd):
         # Creando copia del AFD
         afd = self.assignStates().copy()
@@ -389,7 +407,9 @@ class AFN:
             
 aff = AFN("(a|b)*abb")
 aff.MYT()
-print(aff.simulateNFA("ababb"))
+print(aff.simulateAFN("abb"))
+aff.toAFD()
+print(aff.simulateAFD("abb"))
 # aff.graph_myt()
 aff.toAFD()
 # newAFD = aff.minimizationAFD(aff.afd)
