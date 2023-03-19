@@ -1,8 +1,9 @@
 
-from .Format import Format
+from Format import Format
 import os
 os.environ["PATH"] += os.pathsep + 'C:/Program Files (x86)/Graphviz/bin'    
-from .StateAFD import StateAFD
+from StateAFD import StateAFD
+from Syntax import Syntax
 
 import pydot
 import networkx as nx
@@ -517,11 +518,14 @@ def printPostOrder(tree):
 
             
 
-
-afdd = AFD('(a*|b*)c')
-var = 'ab'
-# afdd.generateAFD()
-afdd.simulateDirectAFD_General(var)
-# afdd.generateMiniAFD()
-afdd.simulateMiniAFD_General(var)
-
+string = '(0|1)0*1(1|0)*'
+syntax = Syntax(string)
+if string and syntax.checkParenthesis() and syntax.checkDot() and not syntax.checkMultU() and syntax.checkOperator() and syntax.checkOperatorValid() and syntax.checkLastNotU():
+    afdd = AFD(string)
+    var = '001'
+    afdd.generateAFD()
+    afdd.simulateDirectAFD_General(var)
+    afdd.generateMiniAFD()
+    afdd.simulateMiniAFD_General(var)
+else:
+    print('Cadena no valida')

@@ -489,11 +489,11 @@ class AFN:
         
 
 
-string = '(a|b)*a(a|b)(a|b)'
+string = ''
 syntax = Syntax(string)
 if string and syntax.checkParenthesis() and syntax.checkDot() and not syntax.checkMultU() and syntax.checkOperator() and syntax.checkOperatorValid() and syntax.checkLastNotU():
     aff = AFN(string)
-    cadena_sim = "c"
+    cadena_sim = ""
     aff.draw_all()
     aff.AFsimulations(cadena_sim)
 else:
