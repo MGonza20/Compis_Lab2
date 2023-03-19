@@ -294,17 +294,9 @@ class AFN:
         afd = self.assignStates()
         current_state = afd[0]
         for symbol in string:
+            if symbol not in current_state.transitions:
+                return False
             current_state = [state for key, state in afd.items() if state.name == current_state.transitions[symbol]][0]
-        return current_state.accepting
-
-    
-
-    def simulateAutomataFinitoDeterminista(self, string):
-        afd = self.assignStates()
-        current_state = afd[0]
-        for symbol in string:
-            # Descripcion: 
-            current_state = afd[current_state.transitions[symbol]]
         return current_state.accepting
 
 
@@ -407,9 +399,9 @@ class AFN:
             
 aff = AFN("(a|b)*abb")
 aff.MYT()
-print(aff.simulateAFN("abb"))
+print(aff.simulateAFN("jjjjjabb"))
 aff.toAFD()
-print(aff.simulateAFD("abb"))
+print(aff.simulateAFD("jjjjjabb"))
 # aff.graph_myt()
 aff.toAFD()
 # newAFD = aff.minimizationAFD(aff.afd)
