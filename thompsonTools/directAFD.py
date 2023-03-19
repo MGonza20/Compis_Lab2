@@ -2,8 +2,12 @@
 from Format import Format
 import os
 os.environ["PATH"] += os.pathsep + 'C:/Program Files (x86)/Graphviz/bin'    
-import pydot
 from StateAFD import StateAFD
+
+import pydot
+import networkx as nx
+from graphviz import Digraph
+
 
 class Node:
     def __init__(self, symbol, parent = None, left = None, right = None, no = None, anulable = False, firstpos = [], lastpos = []):
@@ -255,17 +259,28 @@ class AFD:
 
 
     def draw_afd(self, afd):
-        graph = pydot.Dot(graph_type='digraph', strict=True)
-        graph.set_rankdir('LR')
+
+        G = nx.MultiGraph()
 
         for state in afd:
             if state.start:
-                graph.add_node(pydot.Node(str(state.name), color='green', style='filled', shape='circle'))                                               
+                G.add_node(str(state.name), color='green', style='filled', shape='circle')
             if state.accepting:
-                graph.add_node(pydot.Node(str(state.name), shape='doublecircle'))
+                G.add_node(str(state.name), shape='doublecircle')
             for k, v in state.transitions.items():
-                graph.add_edge(pydot.Edge(str(state.name), str(v), label=k))
-        graph.write_png('directAFD.png', encoding='utf-8')
+                G.add_node(v)
+                G.add_edge(str(state.name), str(v), label=k, dir='forward')
+        
+        dot = Digraph()
+        for u, v, data in G.edges(data=True):
+            dot.edge(u, v, label=data['label'], dir=data['dir'])
+        for node in G.nodes:
+            attrs = G.nodes[node]
+            dot.node(node, **attrs)
+
+        dot.attr(rankdir='LR')
+        dot.render('directAFD/directAFD', format='png')
+
 
     
     def generateAFD(self):
@@ -323,5 +338,5 @@ def printPostOrder(tree):
             
 
 
-afdd = AFD('(a*|b*)c')
+afdd = AFD('(0|1)0*1(1|0)*')
 afdd.generateAFD()

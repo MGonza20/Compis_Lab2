@@ -464,15 +464,16 @@ class AFN:
             
 aff = AFN("(0|1)0*1(1|0)*")
 
+var = "00"
 aff.MYT()
-print(aff.simulateAFN("abb"))
+print(aff.simulateAFN(var))
 aff.graph_myt()
 
 aff.toAFD()
-print(aff.simulateAFD("abb"))
+print(aff.simulateAFD(var))
 aff.draw_afd()
 
-print(aff.simulateMiniAFD("abb"))
+print(aff.simulateMiniAFD(var))
 aff.draw_mini_afd()
 
 
