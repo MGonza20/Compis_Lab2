@@ -281,6 +281,19 @@ class AFD:
         dot.attr(rankdir='LR')
         dot.render('directAFD/directAFD', format='png')
 
+    
+    def simulateMiniAFD(self, string, afd):
+        current_state = afd[0]
+        for symbol in string:
+            if symbol not in current_state.transitions:
+                return False
+            current_state = [afd[i] for i in range(len(afd)) if afd[i].name == current_state.transitions[symbol]]
+            if not current_state:
+                return False
+            else:
+                current_state = current_state[0]
+        return current_state.accepting
+
 
     
     def generateAFD(self):
@@ -295,6 +308,23 @@ class AFD:
         self.tableToObj()
         data = self.genAFD()
         self.draw_afd(data)
+
+
+    def simulateMini(self, miniString):
+        st = self.syntaxTree()
+        anulable = self.anulable(st[0])
+        fP = self.firstPosMethod(anulable)
+        lP = self.lastPosMethod(fP)
+        self.tree = lP
+        treeVar = self.tree
+        self.genNextPosDict(treeVar)
+        self.genNextPos(treeVar)
+        self.tableToObj()
+        data = self.genAFD()
+        if self.simulateMiniAFD(miniString, data):
+            print('\nLa cadena pertenece al lenguaje')
+        else:
+            print('\nLa cadena no pertenece al lenguaje')
         
     
 
@@ -313,7 +343,6 @@ class AFD:
             if v.positions in aceptting:
                 v.aceptting = True
         return table
-
 
 
 
@@ -338,5 +367,6 @@ def printPostOrder(tree):
             
 
 
-afdd = AFD('(a|b)*a(a|b)(a|b)')
+afdd = AFD('(a*|b*)c')
 afdd.generateAFD()
+afdd.simulateMini('aaaaaaaaaac')

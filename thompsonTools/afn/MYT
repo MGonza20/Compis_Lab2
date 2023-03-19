@@ -1,35 +1,45 @@
 digraph {
-	19 -> 24 [label="ε" dir=forward]
-	18 -> 19 [label=a dir=forward]
-	21 -> 24 [label="ε" dir=forward]
-	20 -> 21 [label="ε" dir=forward]
-	22 -> 18 [label="ε" dir=forward]
-	22 -> 20 [label="ε" dir=forward]
-	24 -> 28 [label=b dir=forward]
-	28 -> 26 [label="ε" dir=forward]
+	23 -> 27 [label="ε" dir=forward]
+	22 -> 23 [label=a dir=forward]
+	25 -> 27 [label="ε" dir=forward]
+	24 -> 25 [label=b dir=forward]
+	26 -> 22 [label="ε" dir=forward]
+	26 -> 24 [label="ε" dir=forward]
 	27 -> 26 [label="ε" dir=forward]
-	27 -> 34 [label="ε" dir=forward]
-	26 -> 27 [label=a dir=forward]
-	34 -> 30 [label="ε" dir=forward]
-	34 -> 32 [label="ε" dir=forward]
-	31 -> 35 [label="ε" dir=forward]
-	30 -> 31 [label=c dir=forward]
-	33 -> 35 [label="ε" dir=forward]
-	32 -> 33 [label="ε" dir=forward]
-	19
-	18
-	21
-	20
-	22 [color=green shape=circle style=filled]
+	27 -> 30 [label="ε" dir=forward]
+	28 -> 26 [label="ε" dir=forward]
+	28 -> 30 [label="ε" dir=forward]
+	30 -> 36 [label=a dir=forward]
+	36 -> 32 [label="ε" dir=forward]
+	36 -> 34 [label="ε" dir=forward]
+	33 -> 42 [label="ε" dir=forward]
+	32 -> 33 [label=a dir=forward]
+	35 -> 42 [label="ε" dir=forward]
+	34 -> 35 [label=b dir=forward]
+	42 -> 38 [label="ε" dir=forward]
+	42 -> 40 [label="ε" dir=forward]
+	39 -> 43 [label="ε" dir=forward]
+	38 -> 39 [label=a dir=forward]
+	41 -> 43 [label="ε" dir=forward]
+	40 -> 41 [label=b dir=forward]
+	23
+	22
+	25
 	24
-	28
-	27
 	26
-	34
-	31
+	27
+	28 [color=green shape=circle style=filled]
 	30
+	36
 	33
 	32
-	35 [shape=doublecircle]
+	35
+	34
+	42
+	39
+	38
+	41
+	40
+	43 [shape=doublecircle]
 	rankdir=LR
 }

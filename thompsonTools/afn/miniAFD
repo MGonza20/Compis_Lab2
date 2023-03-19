@@ -1,14 +1,27 @@
 digraph {
-	A -> B [label=a dir=forward]
-	A -> C [label=b dir=forward]
-	B -> C [label=b dir=forward]
-	C -> D [label=a dir=forward]
-	D -> D [label=a dir=forward]
-	D -> E [label=c dir=forward]
-	A [color=green shape=circle style=filled]
+	J -> B [label=a dir=forward]
+	J -> J [label=b dir=forward]
+	J -> I [label=b dir=forward]
+	B -> D [label=a dir=forward]
+	B -> E [label=b dir=forward]
+	B -> I [label=a dir=forward]
+	D -> F [label=a dir=forward]
+	D -> G [label=b dir=forward]
+	D -> H [label=a dir=forward]
+	E -> H [label=a dir=forward]
+	E -> H [label=b dir=forward]
+	E -> I [label=b dir=forward]
+	F -> F [label=a dir=forward]
+	F -> G [label=b dir=forward]
+	G -> H [label=a dir=forward]
+	G -> I [label=b dir=forward]
+	J [color=green shape=circle style=filled]
 	B
-	C
-	D [shape=doublecircle]
-	E [shape=doublecircle]
+	D
+	E
+	F [shape=doublecircle]
+	G [shape=doublecircle]
+	H [shape=doublecircle]
+	I [shape=doublecircle]
 	rankdir=LR
 }

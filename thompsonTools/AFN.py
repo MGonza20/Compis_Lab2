@@ -487,9 +487,9 @@ class AFN:
         aff.draw_mini_afd()
         
 
-aff = AFN("(a|ε)b(a+)c?")
+aff = AFN("(a|b)*a(a|b)(a|b)")
 
-var = "abaaaaaaaaaaaaaaaaa"
+var = "c"
 aff.draw_all()
 aff.AFsimulations(var)
 
