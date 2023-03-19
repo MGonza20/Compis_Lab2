@@ -472,19 +472,36 @@ class AFN:
         dot.render('afn/miniAFD', format='png')
 
             
+    def AFsimulations(self, string):
+        self.MYT()
+        print("Simulación AFN: " + f"cadena aceptada" if self.simulateAFN(string) else "Simulación AFN: " + "cadena rechazada")
+        self.toAFD()
+        print("Simulación AFD: " + f"cadena aceptada" if self.simulateAFD(string) else "Simulación AFD: " + "cadena rechazada")
+        print("Simulación AFD Minimizado: " + f"cadena aceptada" if self.simulateMiniAFD(string) else "Simulación AFD Minimizado: " +"cadena rechazada")
+
+    def draw_all(self):
+        aff.MYT()
+        aff.graph_myt()
+        aff.toAFD()
+        aff.draw_afd()
+        aff.draw_mini_afd()
+        
+
 aff = AFN("(a|ε)b(a+)c?")
 
-var = "abac"
-aff.MYT()
-print(aff.simulateAFN(var))
-aff.graph_myt()
+var = "abaaaaaaaaaaaaaaaaa"
+# aff.MYT()
+# print(aff.simulateAFN(var))
+# aff.graph_myt()
 
-aff.toAFD()
-print(aff.simulateAFD(var))
-aff.draw_afd()
+# aff.toAFD()
+# print(aff.simulateAFD(var))
+# aff.draw_afd()
 
-print(aff.simulateMiniAFD(var))
-aff.draw_mini_afd()
+# print(aff.simulateMiniAFD(var))
+# aff.draw_mini_afd()
+aff.draw_all()
+aff.AFsimulations(var)
 
 
 
