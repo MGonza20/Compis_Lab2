@@ -255,7 +255,6 @@ class AFD:
 
 
     def draw_afd(self, afd):
-
         graph = pydot.Dot(graph_type='digraph', strict=True)
         graph.set_rankdir('LR')
 
@@ -267,7 +266,7 @@ class AFD:
             for k, v in state.transitions.items():
                 graph.add_edge(pydot.Edge(str(state.name), str(v), label=k))
         graph.write_png('directAFD.png', encoding='utf-8')
-    
+
     
     def generateAFD(self):
         st = self.syntaxTree()
@@ -282,8 +281,6 @@ class AFD:
         data = self.genAFD()
         self.draw_afd(data)
         
-        # table, last = self.genAFD()
-        # return self.createNewStates(table, last)
     
 
     def generatelP(self):
@@ -303,17 +300,6 @@ class AFD:
         return table
 
 
-    def minimizeAFD(self, table, groups=None):
-        t = table
-        if not groups:
-            groups = [set(), set()]
-            for k, v in t.items():
-                if v.aceptting:
-                    groups[0].add(v)
-                else:
-                    groups[1].add(v)
-        return groups
-        
 
 
 

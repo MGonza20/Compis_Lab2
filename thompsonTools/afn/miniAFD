@@ -1,0 +1,12 @@
+digraph {
+	A -> I [label=0 dir=forward]
+	A -> I [label=1 dir=forward]
+	I -> I [label=0 dir=forward]
+	I -> H [label=1 dir=forward]
+	H -> H [label=0 dir=forward]
+	H -> H [label=1 dir=forward]
+	A [color=green shape=circle style=filled]
+	I
+	H [shape=doublecircle]
+	rankdir=LR
+}

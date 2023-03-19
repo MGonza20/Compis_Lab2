@@ -5,7 +5,11 @@ from Format import Format
 from StateAFD import StateAFD
 import pydot
 import networkx as nx
-import matplotlib.pyplot as plt
+from graphviz import Digraph
+from networkx.drawing.nx_agraph import to_agraph
+
+
+
 
 import os
 os.environ["PATH"] += os.pathsep + 'C:/Program Files (x86)/Graphviz/bin'    
@@ -168,6 +172,9 @@ class AFN:
 
     def graph_myt(self):
         myt = self.MYT()
+
+        G = nx.MultiDiGraph()
+
         graph = pydot.Dot(graph_type='digraph', strict=True)
         graph.set_rankdir('LR')
 
@@ -175,13 +182,27 @@ class AFN:
             for k2, v2 in v.items():
                 for i in range(len(v2)):
                     if k == myt.start:
-                        graph.add_node(pydot.Node(str(k), color='green', style='filled', shape='circle'))                                               
+                        G.add_node(str(k), color='green', style='filled', shape='circle')                                               
                     if v2[i] == myt.end:
-                        graph.add_node(pydot.Node(str(v2[i]), shape='doublecircle'))
+                        G.add_node(str(v2[i]), shape='doublecircle')
                     else:
-                        graph.add_node(pydot.Node(str(v2[i])))
-                    graph.add_edge(pydot.Edge(str(k), str(v2[i]), label=k2))
-        graph.write_png('AFN.png', encoding='utf-8')
+                        G.add_node(str(v2[i]))
+                    G.add_edge(str(k), str(v2[i]), label=k2)
+
+        dot = Digraph()
+        for u, v, data in G.edges(data=True):
+            if 'dir' in data:
+                dot.edge(u, v, label=data['label'], dir=data['dir'])
+            else:
+                dot.edge(u, v, label=data['label'], dir='forward')
+        for node in G.nodes:
+            attrs = G.nodes[node]
+            dot.node(node, **attrs)
+
+        dot.attr(rankdir='LR')
+        dot.render('afn/MYT')
+
+
 
 
     def cerraduraKleene(self, state, checked=None):
@@ -305,21 +326,29 @@ class AFN:
     def draw_afd(self):
         afd = self.assignStates()
 
-        graph = pydot.Dot(graph_type='digraph', strict=True)
-        graph.set_rankdir('LR')
+        G = nx.MultiDiGraph()
 
         for state in afd.values():
             for k, v in state.transitions.items():
                 if state.start:
-                    graph.add_node(pydot.Node(str(state.name), color='green', style='filled', shape='circle'))                                               
+                    G.add_node(state.name, color='green', style='filled', shape='circle')                                               
                 if state.accepting:
-                    graph.add_node(pydot.Node(str(state.name), shape='doublecircle'))
+                    G.add_node(state.name, shape='doublecircle')
                 else:
                     if v != 'estado muerto':
-                        graph.add_node(pydot.Node(str(v)))
+                        G.add_node(v)
                 if v != 'estado muerto':
-                    graph.add_edge(pydot.Edge(str(state.name), str(v), label=k))
-        graph.write_png('AfnToAfd.png', encoding='utf-8')
+                    G.add_edge(state.name, v, label=k, dir='forward')
+
+        dot = Digraph()
+        for u, v, data in G.edges(data=True):
+            dot.edge(u, v, label=data['label'], dir=data['dir'])
+        for node in G.nodes:
+            attrs = G.nodes[node]
+            dot.node(node, **attrs)
+
+        dot.attr(rankdir='LR')
+        dot.render('afn/AfnToAfd')
 
 
 
@@ -409,22 +438,27 @@ class AFN:
         afd = self.minimizationAFD()
 
         G = nx.MultiGraph()
+
+        # add nodes and edges to G
         for state in afd.values():
             for k, v in state.transitions.items():
                 if state.start:
                     G.add_node(state.name, color='green', style='filled', shape='circle')
                 if state.accepting:
                     G.add_node(state.name, shape='doublecircle')
-
                 G.add_node(v)
                 G.add_edge(state.name, v, label=k, dir='forward')
 
-        pydot_graph = nx.drawing.nx_pydot.to_pydot(G)
-        pydot_graph.set_rankdir('LR')
-        png_bytes = pydot_graph.create_png()
-        with open('miniAFD.png', 'wb') as f:
-            f.write(png_bytes)
-              
+        
+        dot = Digraph()
+        for u, v, data in G.edges(data=True):
+            dot.edge(u, v, label=data['label'], dir=data['dir'])
+        for node in G.nodes:
+            attrs = G.nodes[node]
+            dot.node(node, **attrs)
+
+        dot.attr(rankdir='LR')
+        dot.render('afn/miniAFD')
 
             
 aff = AFN("(0|1)0*1(1|0)*")
