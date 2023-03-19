@@ -490,16 +490,6 @@ class AFN:
 aff = AFN("(a|ε)b(a+)c?")
 
 var = "abaaaaaaaaaaaaaaaaa"
-# aff.MYT()
-# print(aff.simulateAFN(var))
-# aff.graph_myt()
-
-# aff.toAFD()
-# print(aff.simulateAFD(var))
-# aff.draw_afd()
-
-# print(aff.simulateMiniAFD(var))
-# aff.draw_mini_afd()
 aff.draw_all()
 aff.AFsimulations(var)
 
