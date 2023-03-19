@@ -1,8 +1,8 @@
 
-from Format import Format
+from .Format import Format
 import os
 os.environ["PATH"] += os.pathsep + 'C:/Program Files (x86)/Graphviz/bin'    
-from StateAFD import StateAFD
+from .StateAFD import StateAFD
 
 import pydot
 import networkx as nx
@@ -519,9 +519,9 @@ def printPostOrder(tree):
 
 
 afdd = AFD('(a*|b*)c')
-var = 'c'
-afdd.generateAFD()
+var = 'ab'
+# afdd.generateAFD()
 afdd.simulateDirectAFD_General(var)
-afdd.generateMiniAFD()
+# afdd.generateMiniAFD()
 afdd.simulateMiniAFD_General(var)
 

@@ -1,0 +1,45 @@
+digraph {
+	45 -> 49 [label="ε" dir=forward]
+	44 -> 45 [label=a dir=forward]
+	47 -> 49 [label="ε" dir=forward]
+	46 -> 47 [label=b dir=forward]
+	48 -> 44 [label="ε" dir=forward]
+	48 -> 46 [label="ε" dir=forward]
+	49 -> 48 [label="ε" dir=forward]
+	49 -> 52 [label="ε" dir=forward]
+	50 -> 48 [label="ε" dir=forward]
+	50 -> 52 [label="ε" dir=forward]
+	52 -> 58 [label=a dir=forward]
+	58 -> 54 [label="ε" dir=forward]
+	58 -> 56 [label="ε" dir=forward]
+	55 -> 64 [label="ε" dir=forward]
+	54 -> 55 [label=a dir=forward]
+	57 -> 64 [label="ε" dir=forward]
+	56 -> 57 [label=b dir=forward]
+	64 -> 60 [label="ε" dir=forward]
+	64 -> 62 [label="ε" dir=forward]
+	61 -> 65 [label="ε" dir=forward]
+	60 -> 61 [label=a dir=forward]
+	63 -> 65 [label="ε" dir=forward]
+	62 -> 63 [label=b dir=forward]
+	45
+	44
+	47
+	46
+	48
+	49
+	50 [color=green shape=circle style=filled]
+	52
+	58
+	55
+	54
+	57
+	56
+	64
+	61
+	60
+	63
+	62
+	65 [shape=doublecircle]
+	rankdir=LR
+}

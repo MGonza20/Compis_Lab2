@@ -1,8 +1,9 @@
 
 
-from .Bridge import Bridge
-from .Format import Format
-from .StateAFD import StateAFD
+from Bridge import Bridge
+from Format import Format
+from StateAFD import StateAFD
+from Syntax import Syntax
 import pydot
 import networkx as nx
 from graphviz import Digraph
@@ -487,11 +488,16 @@ class AFN:
         aff.draw_mini_afd()
         
 
-aff = AFN("(a|b)*a(a|b)(a|b)")
 
-var = "c"
-aff.draw_all()
-aff.AFsimulations(var)
+string = '(a|b)*a(a|b)(a|b)'
+syntax = Syntax(string)
+if string and syntax.checkParenthesis() and syntax.checkDot() and not syntax.checkMultU() and syntax.checkOperator() and syntax.checkOperatorValid() and syntax.checkLastNotU():
+    aff = AFN(string)
+    cadena_sim = "c"
+    aff.draw_all()
+    aff.AFsimulations(cadena_sim)
+else:
+    print("Cadena no valida")
 
 
 
